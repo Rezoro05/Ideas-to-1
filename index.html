@@ -277,6 +277,13 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .node .yr { font: 500 11px/1 var(--font-mono); letter-spacing: .08em; color: var(--graphite); font-variant-numeric: tabular-nums; height: 22px; }
 .node .dot { width: 11px; height: 11px; background: var(--paper); border: 1.5px solid var(--ink); transform: rotate(45deg); margin: 0 0 12px 1px; }
 .node.now .dot { background: var(--accent); border-color: var(--accent); }
+/* "Now" pulses like a live location pin */
+.node.now .dot { animation: now-blink 1.6s ease-in-out infinite; }
+@media (min-width: 761px) { .node.now .dot { position: relative; } }
+.node.now .dot::after { content: ""; position: absolute; inset: -5px; border: 1.5px solid var(--accent); animation: now-ring 1.6s ease-out infinite; }
+@keyframes now-blink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+@keyframes now-ring { from { transform: scale(.6); opacity: .9; } to { transform: scale(1.9); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .node.now .dot, .node.now .dot::after { animation: none; } }
 .node .n-name { font: 500 17px/1.2 var(--font-display); }
 .node .n-desc { color: var(--graphite); font-size: 14px; }
 .node-btn { display: flex; flex-direction: column; gap: 6px; width: 100%; padding: 0; margin: 0; background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
