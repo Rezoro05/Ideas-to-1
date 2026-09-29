@@ -229,6 +229,18 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .nav a { color: var(--graphite); text-decoration: none; font: 500 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 .nav a:hover, .nav a:focus-visible, .nav a[aria-current="page"] { color: var(--ink); }
 .nav .nav-cta { color: var(--accent); }
+/* Phones: logo and menu on one line */
+@media (max-width: 560px) {
+  .bar { flex-wrap: nowrap; gap: 12px; }
+  .home-link .brand { height: 18px; width: 133px; }
+  .nav { flex-wrap: nowrap; gap: 14px; }
+  .nav a { font-size: 10px; letter-spacing: .05em; white-space: nowrap; }
+}
+@media (max-width: 370px) {
+  .home-link .brand { height: 15px; width: 111px; }
+  .nav { gap: 10px; }
+  .nav a { letter-spacing: .02em; }
+}
 .page-head { padding-block: 56px 8px; }
 .page-head h1 { font: 300 clamp(40px, 7vw, 88px)/1 var(--font-display); letter-spacing: -.02em; margin: 0; }
 .page-head p { color: var(--graphite); max-width: 60ch; margin: 18px 0 0; font-size: 18px; }
