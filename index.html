@@ -255,7 +255,7 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 @keyframes ld-fly { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: translate(260px, -140px) rotate(-18deg) scale(.8); } }
 @keyframes loader-out { to { opacity: 0; visibility: hidden; } }
 .tag-inst { font: 500 10px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--graphite); border: 1px solid var(--rule); padding: 5px 8px; white-space: nowrap; }
-.lineage { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); position: relative; }
+.lineage { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); position: relative; }
 .lineage::before { content: ""; position: absolute; left: 0; right: 0; top: 34px; border-top: 1px solid var(--ink); }
 .node { position: relative; display: flex; flex-direction: column; gap: 6px; padding-right: 16px; min-width: 0; }
 .node .yr { font: 500 11px/1 var(--font-mono); letter-spacing: .08em; color: var(--graphite); font-variant-numeric: tabular-nums; height: 22px; }
@@ -263,6 +263,36 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .node.now .dot { background: var(--accent); border-color: var(--accent); }
 .node .n-name { font: 500 17px/1.2 var(--font-display); }
 .node .n-desc { color: var(--graphite); font-size: 14px; }
+.node-btn { display: flex; flex-direction: column; gap: 6px; width: 100%; padding: 0; margin: 0; background: none; border: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
+.node-btn:hover .n-name, .node-btn:focus-visible .n-name, .node-btn[aria-expanded="true"] .n-name { color: var(--accent); }
+.node-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
+.node-btn[aria-expanded="true"] .dot { background: var(--accent); border-color: var(--accent); }
+.n-more { font: 500 10px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
+.node-btn[aria-expanded="true"] .n-more { visibility: hidden; }
+.branches .b-link { display: flex; flex-direction: column; gap: 2px; text-align: left; font: inherit; color: inherit; }
+.branches .b-link:hover .b-name { color: var(--accent); text-decoration: underline; }
+.stop-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.7,0,.2,1); }
+.stop-panel.open { grid-template-rows: 1fr; }
+.stop-inner { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 24px 40px; margin-top: 28px; padding: 26px 28px; background: var(--plane); color: var(--plane-edge); border-top: 3px solid var(--accent);
+  transform-origin: top; transform: perspective(700px) rotateX(-60deg); opacity: 0; transition: transform .5s cubic-bezier(.2,.8,.2,1), opacity .3s; }
+.stop-panel.open .stop-inner { transform: none; opacity: 1; }
+.stop-inner:not(:has(figure)) { grid-template-columns: 1fr; }
+.stop-inner h3 { margin: 0 0 4px; font: 500 24px/1.2 var(--font-display); }
+.stop-inner .s-role { margin: 0 0 14px; font: 400 12px/1.4 var(--font-mono); color: color-mix(in srgb, var(--plane-edge) 60%, var(--plane)); }
+.stop-inner p { margin: 0 0 12px; max-width: 60ch; }
+.stop-inner ul { margin: 0 0 14px; padding-left: 18px; }
+.stop-inner li + li { margin-top: 5px; }
+.s-awards-h { margin: 16px 0 8px; font: 500 10px/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: color-mix(in srgb, var(--plane-edge) 60%, var(--plane)); }
+.s-awards { list-style: none; padding: 0 !important; }
+.s-awards li { display: grid; grid-template-columns: 96px 1fr auto; gap: 12px; align-items: baseline; padding: 8px 0; border-top: 1px solid color-mix(in srgb, var(--plane-edge) 12%, var(--plane)); margin: 0 !important; }
+.s-awards .medal { color: var(--accent); }
+.s-awards .when { font: 400 12px/1 var(--font-mono); color: color-mix(in srgb, var(--plane-edge) 60%, var(--plane)); }
+.s-links { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 10px; }
+.stop-inner figure { margin: 0; }
+.stop-inner figure img { display: block; width: 100%; height: auto; max-height: 420px; object-fit: cover; }
+.stop-inner figcaption { margin-top: 8px; font: 400 12px/1.4 var(--font-mono); color: color-mix(in srgb, var(--plane-edge) 60%, var(--plane)); }
+@media (max-width: 760px) { .stop-inner { grid-template-columns: 1fr; padding: 20px 18px; margin-top: 14px; } .s-awards li { grid-template-columns: 1fr auto; } .s-awards .medal { grid-column: 1 / -1; } }
+@media (prefers-reduced-motion: reduce) { .stop-panel, .stop-inner { transition: none; } }
 .branches { list-style: none; margin: 12px 0 0; padding: 0 0 0 14px; border-left: 1px dashed var(--fold-edge); display: flex; flex-direction: column; gap: 10px; }
 .branch { display: flex; flex-direction: column; gap: 2px; }
 .b-name { font: 500 14px/1.2 var(--font-display); }
@@ -772,97 +802,18 @@ html, body { overflow-x: clip; }
       <p>I take ideas from 0 to 1. Here is how I got good at it.</p>
     </section>
     <section class="band tone tone-mist" aria-labelledby="lineage-title">
-      <div class="band-head"><h2 id="lineage-title">The path so far</h2><span class="tag-inst">Lineage · 2010 → now</span></div>
+      <div class="band-head"><h2 id="lineage-title">The path so far</h2><span class="tag-inst">Click a stop for the story and awards</span></div>
       <ol class="lineage">
-        <li class="node"><span class="yr">2010</span><span class="dot" aria-hidden="true"></span><span class="n-name">PCmania</span><span class="n-desc">Tech education site · Silver at Infomatrix</span></li><li class="node"><span class="yr">2016–19</span><span class="dot" aria-hidden="true"></span><span class="n-name">ABK agency</span><span class="n-desc">Creative strategy and production · Cannes Young Lions Silver and Bronze</span></li><li class="node"><span class="yr">2021</span><span class="dot" aria-hidden="true"></span><span class="n-name">TBC Bank</span><span class="n-desc">Product Owner → Product Lead · VISA Best SME Project</span></li><li class="node"><span class="yr">2022</span><span class="dot" aria-hidden="true"></span><span class="n-name">eConsul</span><span class="n-desc">Co-founder · $500K+ a year, 22 people</span><ul class="branches"><li class="branch"><span class="b-name">greencard.ge</span><span class="b-desc">10K+ users</span></li><li class="branch"><span class="b-name">ePhoto.AI</span><span class="b-desc">8K+ users in year one</span></li></ul></li><li class="node now"><span class="yr">Now</span><span class="dot" aria-hidden="true"></span><span class="n-name">AI-built products</span><span class="n-desc">LLMs, agents, automation · next planes in the sky</span></li>
+        <li class="node"><button class="node-btn" type="button" data-stop="pcmania" aria-expanded="false" aria-controls="stop-panel"><span class="yr">2010</span><span class="dot" aria-hidden="true"></span><span class="n-name">PCmania</span><span class="n-desc">Tech education site · Silver at Infomatrix</span><span class="n-more" aria-hidden="true">Details +</span></button></li><li class="node"><button class="node-btn" type="button" data-stop="abk" aria-expanded="false" aria-controls="stop-panel"><span class="yr">2016–19</span><span class="dot" aria-hidden="true"></span><span class="n-name">ABK agency</span><span class="n-desc">Creative strategy and production · Cannes Young Lions</span><span class="n-more" aria-hidden="true">Details +</span></button></li><li class="node"><button class="node-btn" type="button" data-stop="momo" aria-expanded="false" aria-controls="stop-panel"><span class="yr">2018</span><span class="dot" aria-hidden="true"></span><span class="n-name">Momo</span><span class="n-desc">Idea for Tbilisi hackathon · 1st place</span><span class="n-more" aria-hidden="true">Details +</span></button></li><li class="node"><button class="node-btn" type="button" data-stop="tbc" aria-expanded="false" aria-controls="stop-panel"><span class="yr">2021</span><span class="dot" aria-hidden="true"></span><span class="n-name">TBC Bank</span><span class="n-desc">Product Owner → Product Lead · VISA Best SME Project</span><span class="n-more" aria-hidden="true">Details +</span></button></li><li class="node"><button class="node-btn" type="button" data-stop="econsul" aria-expanded="false" aria-controls="stop-panel"><span class="yr">2022</span><span class="dot" aria-hidden="true"></span><span class="n-name">eConsul</span><span class="n-desc">Co-founder · $500K+ a year, 22 people</span><span class="n-more" aria-hidden="true">Details +</span></button><ul class="branches"><li class="branch"><button class="b-link panel-link" type="button" data-target="greencard"><span class="b-name">greencard.ge</span><span class="b-desc">10K+ users</span></button></li><li class="branch"><button class="b-link panel-link" type="button" data-target="ephoto"><span class="b-name">ePhoto.AI</span><span class="b-desc">8K+ users in year one</span></button></li></ul></li><li class="node now"><button class="node-btn" type="button" data-stop="now" aria-expanded="false" aria-controls="stop-panel"><span class="yr">Now</span><span class="dot" aria-hidden="true"></span><span class="n-name">AI-built products</span><span class="n-desc">LLMs, agents, automation · next planes in the sky</span><span class="n-more" aria-hidden="true">Details +</span></button></li>
       </ol>
+      <div class="stop-panel" id="stop-panel" role="region" aria-live="polite"><div class="panel-clip"><div class="stop-inner" id="stop-inner"></div></div></div>
     </section>
-    <section class="band" aria-labelledby="proof-title">
-      <div class="band-head">
-        <h2 id="proof-title">Recognition</h2>
-        <span class="tag-inst">Log · 2010–2022</span>
-        <svg class="critter turtle" viewBox="0 0 120 100" aria-hidden="true"><polygon class="f-lo" points="22,60 12,63 24,65"/><polygon class="f-lo" points="30,60 42,60 32,74"/><polygon class="f-lo" points="86,60 98,60 96,74"/><polygon class="f-mid" points="104,52 118,45 116,58 104,61"/><polygon class="f-hi" points="22,60 40,32 60,60"/><polygon class="f-mid" points="40,32 72,24 60,60"/><polygon class="f-hi" points="72,24 96,38 60,60"/><polygon class="f-lo" points="96,38 104,60 60,60"/><polygon class="f-lo" points="18,60 106,60 100,65 24,65"/></svg>
-      </div>
-      <ul class="awards">
-        <li>
-          <button class="award-row" type="button" aria-expanded="false" aria-controls="award-0">
-            <span class="medal gold">Gold</span><span class="what">GITA pitching competition, eConsul · $60K grant</span><span class="when">2022</span><span class="chev" aria-hidden="true"></span>
-          </button>
-          <div class="award-panel" id="award-0" role="region">
-            <div class="panel-clip"><div class="panel-inner">
-              <div class="frame"><span>Award photo, eConsul pitch</span><small>Image loads from your downloaded originals</small></div>
-              <button class="panel-link" type="button" data-target="econsul">Open eConsul →</button>
-            </div></div>
-          </div>
-        </li>
-        <li>
-          <button class="award-row" type="button" aria-expanded="false" aria-controls="award-1">
-            <span class="medal gold">Gold</span><span class="what">Best SME Project in the Caucasus by VISA: “E-Commerce in 3 Days” · TBC Bank</span><span class="when">2021</span><span class="chev" aria-hidden="true"></span>
-          </button>
-          <div class="award-panel" id="award-1" role="region">
-            <div class="panel-clip"><div class="panel-inner">
-              <div class="frame"><span>Award photo, VISA SME project</span><small>Image loads from your downloaded originals</small></div>
-              
-            </div></div>
-          </div>
-        </li>
-        <li>
-          <button class="award-row" type="button" aria-expanded="false" aria-controls="award-2">
-            <span class="medal gold">Winner</span><span class="what">TBC Bank Start-up Challenge</span><span class="when">2021</span><span class="chev" aria-hidden="true"></span>
-          </button>
-          <div class="award-panel" id="award-2" role="region">
-            <div class="panel-clip"><div class="panel-inner">
-              <div class="frame"><span>Photo, TBC Start-up Challenge</span><small>Image loads from your downloaded originals</small></div>
-              
-            </div></div>
-          </div>
-        </li>
-        <li>
-          <button class="award-row" type="button" aria-expanded="false" aria-controls="award-3">
-            <span class="medal gold">Gold</span><span class="what">Idea for Tbilisi hackathon, Momo</span><span class="when">2018</span><span class="chev" aria-hidden="true"></span>
-          </button>
-          <div class="award-panel" id="award-3" role="region">
-            <div class="panel-clip"><div class="panel-inner">
-              <figure class="frame photo"><img src="about/award-idea-for-tbilisi-2018.jpg" alt="Holding the Idea for Tbilisi first-place cheque, 3,000 GEL" loading="lazy"></figure>
-              <button class="panel-link" type="button" data-target="momo">Open Momo →</button>
-            </div></div>
-          </div>
-        </li>
-        <li>
-          <button class="award-row" type="button" aria-expanded="false" aria-controls="award-4">
-            <span class="medal silver">Silver · Bronze</span><span class="what">Cannes Young Lions Georgia, Print</span><span class="when">2016–17</span><span class="chev" aria-hidden="true"></span>
-          </button>
-          <div class="award-panel" id="award-4" role="region">
-            <div class="panel-clip"><div class="panel-inner">
-              <div class="frame"><span>Print work, Cannes Young Lions</span><small>Image loads from your downloaded originals</small></div>
-              <button class="panel-link" type="button" data-target="craft">See it in Craft →</button>
-            </div></div>
-          </div>
-        </li>
-        <li>
-          <button class="award-row" type="button" aria-expanded="false" aria-controls="award-5">
-            <span class="medal silver">Silver</span><span class="what">Infomatrix, PCmania · Bucharest</span><span class="when">2010</span><span class="chev" aria-hidden="true"></span>
-          </button>
-          <div class="award-panel" id="award-5" role="region">
-            <div class="panel-clip"><div class="panel-inner">
-              <figure class="frame photo"><img src="about/award-infomatrix-2010.jpg" alt="Two students with medals on stage at Infomatrix 2010 in Bucharest" loading="lazy"></figure>
-            </div></div>
-          </div>
-        </li>
-      </ul>
-    </section>
-    <section class="prose">
+        <section class="prose">
       <h2>It started with games</h2>
-      <p>Games led to reinstalling Windows for neighbors and friends. That curiosity led me and a hacker friend to co-found PCmania, Georgia's first tech education website. It won silver at Infomatrix 2010 in Bucharest, my first taste of winning.</p>
+      <p>I’ve always been tech-savvy. It started with gaming, which soon turned into reinstalling Windows for neighbors and friends. That curiosity led me and a hacker friend to co-found Georgia’s first tech education website. It fueled our passion for technology and won us a silver medal at Infomatrix, an international computer olympiad. That was my first taste of winning.</p>
       <figure class="prose-photo"><img src="about/childhood-keyboard.jpg" alt="Rez as a young boy typing at a computer keyboard" loading="lazy"><figcaption>Where it started.</figcaption></figure>
-      <h2>Then I learned craft</h2>
-      <p>I joined ABK as an account manager and moved into creative strategy and production management. Over 20+ productions I learned how to make an idea land with real people, on a real budget, by a real deadline.</p>
-      <h2>Then I learned product at scale</h2>
-      <p>At TBC Bank, Georgia's largest bank, I led digital products for small and medium businesses. With VISA we digitized 250+ businesses during the lockdown, helping them earn $1M+ in six months; VISA named it the best SME project in the Caucasus. I also shipped Georgia's first digital signature service for businesses and gave a keynote at the World Bank IFC's Caucasus conference.</p>
-      <h2>Then I shipped companies</h2>
-      <p>I co-founded eConsul and grew it into Georgia's largest visa and immigration tech startup: $500K+ in annual revenue, 22 people, profitable within 3 months, and an NPS of 79. ePhoto.AI and greencard.ge followed, reaching 8K+ and 10K+ users. I was a beta tester of greencard.ge, won the Green Card Lottery, and moved from Georgia to the US to start over.</p>
-      <h2>Now I build with AI</h2>
-      <p>AI lets one person take an idea further, faster. I build AI-powered products with LLMs, agents, workflow automation and rapid prototyping. New ideas land in the sky on the homepage as they launch.</p>
+      <h2>A fresh start</h2>
+      <p>Recently I won the Green Card Lottery through the platform I helped build, and made the leap from the small country of Georgia to the US. I packed up everything I had built over 30 years to start fresh. Now I’m here, on a new path to my American dream. I built this site to reach the people who will come along on this journey.</p>
       <h2>Also</h2>
       <p>BA in Governance and Social Sciences from Free University of Tbilisi on a full scholarship, minor in marketing. Y Combinator Startup School (2022) and Google's UX design certificate (2025). Off the clock: filmmaking, photography, skiing, travel and sci-fi novels.</p>
     </section>
@@ -1469,6 +1420,62 @@ async function saveNote(note) {
 })();
 
 syncSky();
+
+/* ---------- About: the path, with each stop's story and awards ---------- */
+const STOPS = {
+  pcmania: { title: "PCmania", when: "2010", role: "Co-founder, with a hacker friend",
+    text: "Georgia’s first tech education website, born from gaming and reinstalling Windows for neighbors.",
+    awards: [["Silver", "Infomatrix, international computer olympiad · Bucharest", "2010"]],
+    photo: ["about/award-infomatrix-2010.jpg", "Two students with medals on stage at Infomatrix 2010 in Bucharest", "Infomatrix 2010, Bucharest"] },
+  abk: { title: "ABK agency", when: "2016–19", role: "Account manager → creative strategist and production manager",
+    text: "20+ productions for brands and public campaigns. I learned how to make an idea land with real people, on a real budget, by a real deadline.",
+    awards: [["Silver · Bronze", "Cannes Young Lions Georgia, Print", "2016–17"]],
+    links: [["craft", "See the work in Craft →"]] },
+  momo: { title: "Momo", when: "2018", role: "Hackathon team",
+    text: "Winning project at the Idea for Tbilisi hackathon.",
+    awards: [["1st place", "Idea for Tbilisi hackathon · 3,000 GEL prize", "2018"]],
+    photo: ["about/award-idea-for-tbilisi-2018.jpg", "Holding the Idea for Tbilisi first-place cheque, 3,000 GEL", "Idea for Tbilisi 2018"],
+    links: [["momo", "Open Momo →"]] },
+  tbc: { title: "TBC Bank", when: "2021–22", role: "Product Owner → Product Lead, digital products for small and medium businesses",
+    bullets: ["Digitized 250+ businesses with VISA during the lockdown: $1M+ extra revenue in 6 months", "Shipped Georgia’s first digital signature service for businesses", "Keynote at the World Bank IFC Caucasus conference"],
+    awards: [["Gold", "Best SME Project in the Caucasus by VISA: “E-Commerce in 3 Days”", "2021"], ["Winner", "TBC Bank Start-up Challenge (internal, among employees)", "2021"]] },
+  econsul: { title: "eConsul", when: "2022 → now", role: "Co-founder · Head of Product",
+    bullets: ["Georgia’s largest visa and immigration tech startup", "$500K+ annual revenue · 22 people · profitable within 3 months · NPS 79", "Spun off greencard.ge (10K+ users) and ePhoto.AI (8K+ users in year one)"],
+    awards: [["Nominee", "Tourism Tech Innovation · National Tourism Awards Georgia", "2026"], ["Winner", "Tourism Tech Innovation of the Year", "2024"], ["Gold", "GITA top startup · $60K grant", "2022"]],
+    photo: ["ideas/econsul-team.jpg", "The eConsul team posing together in a sunlit forest", "The eConsul team"],
+    links: [["econsul", "Open eConsul →"], ["greencard", "greencard.ge →"], ["ephoto", "ePhoto.AI →"]] },
+  now: { title: "AI-built products", when: "Now", role: "Building with LLMs, agents, workflow automation and rapid prototyping",
+    text: "AI lets one person take an idea further, faster. New ideas land in the sky on the homepage as they launch.",
+    links: [["home", "See the ideas in the sky →"]] },
+};
+function stopHtml(st) { // pure: stop data → panel markup (content is our own, trusted)
+  const awards = st.awards ? `<p class="s-awards-h">Recognition</p><ul class="s-awards">${st.awards.map(([m, what, yr]) => `<li><span class="medal">${m}</span><span>${what}</span><span class="when">${yr}</span></li>`).join("")}</ul>` : "";
+  const links = st.links ? `<div class="s-links">${st.links.map(([t, label]) => `<button class="panel-link" type="button" data-target="${t}">${label}</button>`).join("")}</div>` : "";
+  const photo = st.photo ? `<figure><img src="${st.photo[0]}" alt="${st.photo[1]}"><figcaption>${st.photo[2]}</figcaption></figure>` : "";
+  return `<div><h3>${st.title} <span class="s-role">· ${st.when}</span></h3><p class="s-role">${st.role}</p>${st.text ? `<p>${st.text}</p>` : ""}${st.bullets ? `<ul>${st.bullets.map(b => `<li>${b}</li>`).join("")}</ul>` : ""}${awards}${links}</div>${photo}`;
+}
+(function () {
+  const panel = document.getElementById("stop-panel"), inner = document.getElementById("stop-inner"), list = document.querySelector(".lineage");
+  const narrow = matchMedia("(max-width: 760px)");
+  let current = null;
+  function place(btn) { if (narrow.matches) btn.closest("li").after(panel); else list.after(panel); }
+  function close() { panel.classList.remove("open"); if (current) current.setAttribute("aria-expanded", "false"); current = null; }
+  document.querySelectorAll(".node-btn").forEach(btn => btn.addEventListener("click", () => {
+    if (current === btn) { close(); return; }
+    if (current) current.setAttribute("aria-expanded", "false");
+    current = btn; btn.setAttribute("aria-expanded", "true");
+    inner.innerHTML = stopHtml(STOPS[btn.dataset.stop]);
+    place(btn);
+    panel.classList.remove("open"); void panel.offsetWidth; panel.classList.add("open");
+  }));
+  inner.addEventListener("click", e => {
+    const b = e.target.closest(".panel-link"); if (!b) return;
+    const t = b.dataset.target;
+    if (t === "craft" || t === "home") { location.hash = t; return; }
+    const r = b.getBoundingClientRect(); openIdea(t, v(r.left, r.top));
+  });
+  narrow.addEventListener("change", () => { if (current) place(current); });
+})();
 
 route();
 </script>
