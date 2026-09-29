@@ -320,6 +320,10 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .closing.tone { padding-block: 96px; }
 /* About: breathing room between sections */
 #view-about .page-head { padding-bottom: 48px; }
+.about-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 24px 48px; align-items: end; }
+.about-portrait { margin: 0; }
+.about-portrait img { display: block; width: 100%; height: auto; border-radius: 2px; }
+@media (max-width: 760px) { .about-head { grid-template-columns: 1fr; } }
 #view-about .prose { padding-top: 72px; padding-bottom: 104px; }
 .closing.board { padding-block: 128px 136px; }
 html, body { overflow-x: clip; }
@@ -800,9 +804,12 @@ html, body { overflow-x: clip; }
   </main>
 
   <main id="view-about" hidden>
-    <section class="page-head">
-      <h1>About</h1>
-      <p>I take ideas from 0 to 1. Here is how I got good at it.</p>
+    <section class="page-head about-head">
+      <div>
+        <h1>About</h1>
+        <p>I take ideas from 0 to 1. Here is how I got good at it.</p>
+      </div>
+      <figure class="about-portrait"><img src="about/rez-portrait.jpg" alt="Rez smiling at his phone, wearing glasses and a purple sweater, against a blue-gray backdrop"></figure>
     </section>
     <section class="band tone tone-mist" aria-labelledby="lineage-title">
       <div class="band-head"><h2 id="lineage-title">The path so far</h2><span class="tag-inst">Click a stop for the story and awards</span></div>
