@@ -290,6 +290,11 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .node-btn:hover .n-name, .node-btn:focus-visible .n-name, .node-btn[aria-expanded="true"] .n-name { color: var(--accent); }
 .node-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 6px; }
 .node-btn[aria-expanded="true"] .dot { background: var(--accent); border-color: var(--accent); }
+/* Hover: the path point lights up and grows, so it reads as clickable */
+.node .dot { transition: transform .2s cubic-bezier(.2,.8,.2,1), background-color .2s, border-color .2s, box-shadow .2s; }
+.node-btn:hover .dot, .node-btn:focus-visible .dot { background: var(--accent); border-color: var(--accent); transform: rotate(45deg) scale(1.45); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); }
+.node-btn:hover .n-more { text-decoration: underline; text-underline-offset: 3px; }
+.node-btn:hover .n-desc { color: var(--ink); }
 .n-more { font: 500 10px/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-top: 4px; }
 .node-btn[aria-expanded="true"] .n-more { visibility: hidden; }
 .branches .b-link { display: flex; flex-direction: column; gap: 2px; text-align: left; font: inherit; color: inherit; }
