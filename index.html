@@ -633,22 +633,17 @@ html, body { overflow-x: clip; }
   .sheet, .sheet-inner, .critter { transition: none; }
 }
 
-/* Dark mode: the hero's light line grid runs behind every dark page and idea sheet */
+/* Dark mode, About page only: the hero's light line grid behind the black background */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body, :root:not([data-theme="light"]) .sheet { --dgrid: color-mix(in srgb, var(--ink) 6%, transparent);
-    background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
-  :root:not([data-theme="light"]) .field::before { display: none; }
+:root:not([data-theme="light"]) #view-about { position: relative; isolation: isolate; }
+:root:not([data-theme="light"]) #view-about::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
+:root:not([data-theme="light"]) #view-about .tone-mist { position: relative; isolation: isolate; }
+:root:not([data-theme="light"]) #view-about .tone-mist::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
 }
-:root[data-theme="dark"] body, :root[data-theme="dark"] .sheet { --dgrid: color-mix(in srgb, var(--ink) 6%, transparent);
-  background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
-:root[data-theme="dark"] .field::before { display: none; }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .tone-mist { position: relative; isolation: isolate; }
-  :root:not([data-theme="light"]) .tone-mist::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
-}
-:root[data-theme="dark"] .tone-mist { position: relative; isolation: isolate; }
-:root[data-theme="dark"] .tone-mist::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
+:root[data-theme="dark"] #view-about { position: relative; isolation: isolate; }
+:root[data-theme="dark"] #view-about::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
+:root[data-theme="dark"] #view-about .tone-mist { position: relative; isolation: isolate; }
+:root[data-theme="dark"] #view-about .tone-mist::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
 </style>
 
 <div class="loader" aria-hidden="true">
