@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ideas to life · Revaz Kuparadze</title>
 <meta name="description" content="Revaz Kuparadze takes ideas from 0 to 1: founder of eConsul, ePhoto and greencard.ge, now building with AI. Book a call.">
 <meta property="og:type" content="website">
@@ -11,6 +16,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+</head>
+<body>
 <style>
 /* Layout: a single plane field under a thin instrument bar; headline anchored bottom-left; plain idea list below as the no-motion baseline. */
 :root {
@@ -663,6 +670,16 @@ html, body { overflow-x: clip; }
 :root[data-theme="dark"] #view-about::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
 :root[data-theme="dark"] #view-about .tone-mist { position: relative; isolation: isolate; }
 :root[data-theme="dark"] #view-about .tone-mist::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
+
+/* Phones: slightly larger reading sizes */
+@media (max-width: 560px) {
+  .field { height: max(640px, calc(100svh - 70px)); }
+  body { font-size: 17px; }
+  .thesis p { font-size: 17px; }
+  .path .step, .node .yr, .n-more, .note-field span, .medal, .role, .work .role, .tag-inst, .logos-title { font-size: 12px; }
+  .node .n-desc, .work .brief, .ideas .line { font-size: 15px; }
+  .skills li, .skill { font-size: 12px; }
+}
 </style>
 
 <div class="loader" aria-hidden="true">
@@ -1538,3 +1555,6 @@ function stopHtml(st) { // pure: stop data → panel markup (content is our own,
 
 route();
 </script>
+
+</body>
+</html>
