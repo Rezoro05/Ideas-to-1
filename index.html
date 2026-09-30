@@ -342,7 +342,11 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 #view-about .page-head { padding-bottom: 48px; }
 .about-closing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 32px 48px; align-items: center; }
 .about-portrait { margin: 0; }
-.about-portrait img { display: block; width: 100%; height: auto; border-radius: 2px; }
+.about-portrait img { display: block; width: 100%; max-width: 440px; height: auto; margin-left: auto; }
+.closing.about-closing { padding-bottom: 0; }
+.about-closing .about-portrait { align-self: end; }
+.about-closing > div { padding-bottom: 96px; }
+@media (max-width: 760px) { .about-closing > div { padding-bottom: 8px; } .about-portrait img { margin: 0 auto; max-width: 320px; } }
 @media (max-width: 760px) { .about-closing { grid-template-columns: 1fr; } }
 #view-about .prose { padding-top: 72px; padding-bottom: 104px; }
 .closing.board { padding-block: 128px 136px; }
@@ -859,7 +863,7 @@ html, body { overflow-x: clip; }
         <h2>Have an idea at 0?</h2>
         <div class="actions"><a class="btn" href="https://calendar.app.google/oPBxK5waPKJncCMs9" target="_blank" rel="noopener" id="book4">Book a call</a></div>
       </div>
-      <figure class="about-portrait"><img src="about/rez-portrait.jpg" alt="Rez smiling at his phone, wearing glasses and a purple sweater, against a blue-gray backdrop" loading="lazy"></figure>
+      <figure class="about-portrait"><img src="about/rez-cutout.webp" alt="Rez smiling at his phone, wearing glasses and a purple sweater" loading="lazy"></figure>
     </section>
   </main>
 
