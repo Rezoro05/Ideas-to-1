@@ -340,10 +340,10 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .closing.tone { padding-block: 96px; }
 /* About: breathing room between sections */
 #view-about .page-head { padding-bottom: 48px; }
-.about-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 24px 48px; align-items: end; }
+.about-closing { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 520px); gap: 32px 48px; align-items: center; }
 .about-portrait { margin: 0; }
 .about-portrait img { display: block; width: 100%; height: auto; border-radius: 2px; }
-@media (max-width: 760px) { .about-head { grid-template-columns: 1fr; } }
+@media (max-width: 760px) { .about-closing { grid-template-columns: 1fr; } }
 #view-about .prose { padding-top: 72px; padding-bottom: 104px; }
 .closing.board { padding-block: 128px 136px; }
 html, body { overflow-x: clip; }
@@ -836,12 +836,9 @@ html, body { overflow-x: clip; }
   </main>
 
   <main id="view-about" hidden>
-    <section class="page-head about-head">
-      <div>
-        <h1>About</h1>
-        <p>I take ideas from 0 to 1. Here is how I got good at it.</p>
-      </div>
-      <figure class="about-portrait"><img src="about/rez-portrait.jpg" alt="Rez smiling at his phone, wearing glasses and a purple sweater, against a blue-gray backdrop"></figure>
+    <section class="page-head">
+      <h1>About</h1>
+      <p>I take ideas from 0 to 1. Here is how I got good at it.</p>
     </section>
     <section class="band tone tone-mist" aria-labelledby="lineage-title">
       <div class="band-head"><h2 id="lineage-title">The path so far</h2><span class="tag-inst">Click a stop for the story and awards</span></div>
@@ -857,9 +854,12 @@ html, body { overflow-x: clip; }
       <h2>A fresh start</h2>
       <p>Recently I won the Green Card Lottery through the platform I helped build, and made the leap from the small country of Georgia to the US. I packed up everything I had built over 30 years to start fresh. Now I’m here, on a new path to my American dream. I built this site to reach the people who will come along on this journey.</p>
     </section>
-    <section class="band closing tone tone-cobalt">
-      <h2>Have an idea at 0?</h2>
-      <div class="actions"><a class="btn" href="https://calendar.app.google/oPBxK5waPKJncCMs9" target="_blank" rel="noopener" id="book4">Book a call</a></div>
+    <section class="band closing tone tone-cobalt about-closing">
+      <div>
+        <h2>Have an idea at 0?</h2>
+        <div class="actions"><a class="btn" href="https://calendar.app.google/oPBxK5waPKJncCMs9" target="_blank" rel="noopener" id="book4">Book a call</a></div>
+      </div>
+      <figure class="about-portrait"><img src="about/rez-portrait.jpg" alt="Rez smiling at his phone, wearing glasses and a purple sweater, against a blue-gray backdrop" loading="lazy"></figure>
     </section>
   </main>
 
