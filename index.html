@@ -721,6 +721,32 @@ html, body { overflow-x: clip; }
 .ad-meta .role { font: 400 11px/1.3 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--graphite); }
 @media (max-width: 900px) { .ad-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 560px) { .ad-grid { grid-template-columns: 1fr; } .ad-lead { grid-column: auto; grid-row: auto; } .ad-lead .ad-media { aspect-ratio: 16 / 9; min-height: 0; } }
+
+/* Glass touch-ups: frosted surfaces where content scrolls or sits behind (palette unchanged) */
+.bar { background: transparent; box-shadow: none; isolation: isolate; }
+.bar::before { content: ""; position: absolute; top: 0; bottom: -1px; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none;
+  background: color-mix(in srgb, var(--paper) 80%, transparent);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4); backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--ink) 8%, transparent); }
+.sheet .back { background: color-mix(in srgb, var(--panel) 70%, transparent); -webkit-backdrop-filter: blur(12px) saturate(1.4); backdrop-filter: blur(12px) saturate(1.4);
+  border-color: color-mix(in srgb, var(--ink) 14%, transparent); box-shadow: 0 8px 24px -14px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.35); }
+.letter { -webkit-backdrop-filter: blur(6px) saturate(1.2); backdrop-filter: blur(6px) saturate(1.2); background: color-mix(in srgb, #14171B 32%, transparent); }
+.toast { background: color-mix(in srgb, #14171B 78%, transparent); -webkit-backdrop-filter: blur(14px) saturate(1.4); backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid rgba(255,255,255,.12); box-shadow: 0 16px 40px -20px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.1); color: #fff; border-radius: 4px; }
+.ad-media .play, .frame.video .play { background: rgba(255,255,255,.16); -webkit-backdrop-filter: blur(10px) saturate(1.5); backdrop-filter: blur(10px) saturate(1.5);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.45), 0 10px 30px -12px rgba(0,0,0,.6); }
+.ad-media:hover .play, .ad-media:focus-visible .play, .frame.video:hover .play { background: color-mix(in srgb, var(--accent) 78%, transparent); }
+.plane .tag { padding: 3px 6px; margin-top: -3px; border-radius: 3px; background: color-mix(in srgb, var(--paper) 55%, transparent);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+/* Visitors who ask for less transparency get solid surfaces */
+@media (prefers-reduced-transparency: reduce) {
+  .bar::before, .sheet .back, .letter, .toast, .ad-media .play, .frame.video .play, .plane .tag { -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .bar::before { background: var(--paper); }
+  .sheet .back { background: var(--panel); }
+  .toast { background: #14171B; }
+  .ad-media .play, .frame.video .play { background: rgba(20,23,27,.8); }
+  .plane .tag { background: var(--paper); }
+}
 </style>
 
 <div class="loader" aria-hidden="true">
