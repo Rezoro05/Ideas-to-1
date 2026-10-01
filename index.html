@@ -579,7 +579,13 @@ html, body { overflow-x: clip; }
 .letter-body { line-height: 28px; background-image: repeating-linear-gradient(180deg, transparent 0 27px, #E4E7EE 27px 28px); background-attachment: local; }
 .note[hidden], .note-done[hidden], .note-error[hidden] { display: none; }
 .btn-idea { background: var(--accent); color: #fff; border: 0; cursor: pointer; }
-.btn-idea:hover, .btn-idea:focus-visible { background: var(--ink); color: var(--paper); outline: none; }
+.btn-idea { transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .25s, background-color .25s; }
+.btn-idea::after { content: "→"; display: inline-block; width: 0; opacity: 0; overflow: hidden; transition: width .25s, opacity .25s, margin .25s; }
+.btn-idea:hover, .btn-idea:focus-visible { background: color-mix(in srgb, var(--accent) 86%, #fff); color: #fff; outline: none; transform: translateY(-2px);
+  box-shadow: 0 10px 26px -10px color-mix(in srgb, var(--accent) 80%, transparent), 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+.btn-idea:hover::after, .btn-idea:focus-visible::after { width: 1em; opacity: 1; margin-left: 2px; }
+.btn-idea:active { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .btn-idea, .btn-idea::after { transition: none; } .btn-idea:hover { transform: none; } }
 .compose .note-slot { width: min(460px, 100%); max-height: calc(100vh - 32px); overflow: auto; }
 .compose .note { transform-origin: 50% 50%; }
 .compose.open .note-slot { animation: letter-unfold .7s cubic-bezier(.2,.8,.2,1) both; }
