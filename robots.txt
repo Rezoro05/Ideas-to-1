@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rezoro05.github.io/Ideas-to-1/sitemap.xml
