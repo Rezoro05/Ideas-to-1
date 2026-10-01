@@ -1488,7 +1488,7 @@ document.getElementById("letter-remove").addEventListener("click", async () => {
 /* ---------- Boundary: public idea board on the live site (Supabase) ----------
    Fill these two values after creating the Supabase project (see site-assets/idea-board-setup.md).
    The anon key is public by design; the database rules decide what it may do. */
-const PUBLIC_BOARD = { url: "", key: "" };
+const PUBLIC_BOARD = { url: "https://ssqcfsbkmrhjfylxghfj.supabase.co", key: "sb_publishable_iTflyj7RKulZ3DRoDFBmfg_ESbUKOWq" };
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xeaowwln";
 const publicHeaders = () => ({ apikey: PUBLIC_BOARD.key, "Content-Type": "application/json",
   ...(PUBLIC_BOARD.key.startsWith("eyJ") ? { Authorization: "Bearer " + PUBLIC_BOARD.key } : {}) }); // legacy anon keys are JWTs; new publishable keys go in apikey only
