@@ -753,6 +753,14 @@ html, body { overflow-x: clip; }
   .ad-media .play, .frame.video .play { background: rgba(20,23,27,.8); }
   .plane .tag { background: var(--paper); }
 }
+
+/* Hero "Let's talk": inverts to an outlined button with an external-link arrow */
+#book { transition: transform .2s cubic-bezier(.2,.8,.2,1), background-color .25s, color .25s, box-shadow .25s; }
+#book::after { content: "↗"; display: inline-block; width: 0; opacity: 0; overflow: hidden; transition: width .25s, opacity .25s; }
+#book:hover, #book:focus-visible { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink), 0 10px 22px -14px rgba(0,0,0,.45); transform: translateY(-2px); outline: none; }
+#book:hover::after, #book:focus-visible::after { width: 1em; opacity: 1; }
+#book:active { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { #book, #book::after { transition: none; } #book:hover { transform: none; } }
 </style>
 
 <div class="loader" aria-hidden="true">
