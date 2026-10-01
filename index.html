@@ -850,22 +850,10 @@ html, body { overflow-x: clip; }
     <section class="band" aria-labelledby="print-title">
       <div class="band-head"><h2 id="print-title">Print and strategy</h2></div>
       <div class="craft">
-        <article class="work fold"><button class="fold-head" type="button" aria-expanded="false" aria-controls="w-10"><span class="chip">Bronze</span><span class="client">Cannes Young Lions Georgia 2017</span><span class="role">Copywriter · Creative strategy</span><span class="fold-icon" aria-hidden="true"></span></button><div class="fold-body" id="w-10"><div class="panel-clip"><div class="fold-inner"><span class="brief">Promote Georgia, the country, in a positive light.</span><div class="frame"><span>Print · Cannes Young Lions Georgia 2017</span><small>Artwork loads with your images</small></div></div></div></div></article>
-        <article class="work fold"><button class="fold-head" type="button" aria-expanded="false" aria-controls="w-11"><span class="chip">Near win</span><span class="client">Cannes Young Lions Georgia 2018</span><span class="role">Copywriter · Creative strategy</span><span class="fold-icon" aria-hidden="true"></span></button><div class="fold-body" id="w-11"><div class="panel-clip"><div class="fold-inner"><span class="brief">Litter adds up into something big. Keep it clean.</span><div class="frame"><span>Print · Cannes Young Lions Georgia 2018</span><small>Artwork loads with your images</small></div></div></div></div></article>
+        <article class="work fold"><button class="fold-head" type="button" aria-expanded="false" aria-controls="w-10"><span class="chip">Bronze</span><span class="client">Cannes Young Lions Georgia 2017</span><span class="role">Copywriter · Creative strategy</span><span class="fold-icon" aria-hidden="true"></span></button><div class="fold-body" id="w-10"><div class="panel-clip"><div class="fold-inner"><span class="brief">Promote Georgia, the country, in a positive light.</span><figure class="frame photo"><img src="craft/print-cyl-georgia.jpg" alt="Print ad: a woman irons a mountain landscape on an ironing board; Georgia is a small country but if you iron it, it will be bigger than the USA" loading="lazy"></figure></div></div></div></article>
+        <article class="work fold"><button class="fold-head" type="button" aria-expanded="false" aria-controls="w-11"><span class="chip">Near win</span><span class="client">Cannes Young Lions Georgia 2018</span><span class="role">Copywriter · Creative strategy</span><span class="fold-icon" aria-hidden="true"></span></button><div class="fold-body" id="w-11"><div class="panel-clip"><div class="fold-inner"><span class="brief">Litter adds up into something big. Keep it clean.</span><figure class="frame photo"><img src="craft/print-cyl-litter.jpg" alt="Print ad: a dog made of litter under the line Don’t domesticate trash, common space littering is contagious" loading="lazy"></figure></div></div></div></article>
         <article class="work fold"><button class="fold-head" type="button" aria-expanded="false" aria-controls="w-12"><span class="chip">Entry</span><span class="client">Cannes Young Lions Georgia 2019</span><span class="role">Copywriter · Creative strategy</span><span class="fold-icon" aria-hidden="true"></span></button><div class="fold-body" id="w-12"><div class="panel-clip"><div class="fold-inner"><span class="brief">A father's worn ball, a child's golden boot: every champion starts with an assist.</span><div class="frame"><span>Print · Cannes Young Lions Georgia 2019</span><small>Artwork loads with your images</small></div></div></div></div></article>
         <article class="work fold"><button class="fold-head" type="button" aria-expanded="false" aria-controls="w-13"><span class="chip">Print</span><span class="client">ACAG</span><span class="role">Creative strategy</span><span class="fold-icon" aria-hidden="true"></span></button><div class="fold-body" id="w-13"><div class="panel-clip"><div class="fold-inner"><span class="brief">The environmental threat of a hydro plant project.</span><figure class="frame photo"><img src="about/print-acag.jpg" alt="Print ad: a dragon lies across a dam, draining a mountain lake into cracked, burning earth" loading="lazy"></figure></div></div></div></article>
-      </div>
-    </section>
-    <section class="band tone tone-mist" aria-labelledby="photo-title">
-      <div class="band-head"><h2 id="photo-title">Photography</h2><p>Travel work, 2014–2017.</p></div>
-      <div class="photos" tabindex="0" role="region" aria-label="Photography, scroll sideways">
-        <figure class="photo"><div class="frame"><small>Photo pending</small></div><figcaption>Chengdu, China · 2015</figcaption></figure>
-        <figure class="photo"><div class="frame"><small>Photo pending</small></div><figcaption>Phuket, Thailand · 2015</figcaption></figure>
-        <figure class="photo"><div class="frame"><small>Photo pending</small></div><figcaption>Kuala Lumpur, Malaysia · 2014</figcaption></figure>
-        <figure class="photo"><div class="frame"><small>Photo pending</small></div><figcaption>Orbeti, Georgia · 2016</figcaption></figure>
-        <figure class="photo"><div class="frame"><small>Photo pending</small></div><figcaption>Guangzhou, China · 2014</figcaption></figure>
-        <figure class="photo"><div class="frame"><small>Photo pending</small></div><figcaption>Beijing, China · 2014</figcaption></figure>
-        <figure class="photo"><div class="frame"><small>Photo pending</small></div><figcaption>Tusheti, Georgia · 2017</figcaption></figure>
       </div>
     </section>
     <p class="credential">Production Management course, June 2017, with Rebecca Rivo.</p>
@@ -1505,7 +1493,8 @@ const STOPS = {
     photo: ["about/award-infomatrix-2010.jpg", "Two students with medals on stage at Infomatrix 2010 in Bucharest", "Infomatrix 2010, Bucharest"] },
   abk: { title: "ABK agency", when: "2016–19", role: "Account manager → creative strategist and production manager",
     text: "20+ productions for brands and public campaigns. I learned how to make an idea land with real people, on a real budget, by a real deadline.",
-    awards: [["Silver · Bronze", "Cannes Young Lions Georgia, Print", "2016–17"]],
+    awards: [["Studio award", "Design Studio of the Year, with the ABK team", "2017"], ["Silver · Bronze", "Cannes Young Lions Georgia, Print", "2016–17"]],
+    photo: ["about/abk-design-studio-2017.jpg", "ABK’s Design Studio of the Year 2017 trophy on a desk next to the ABK Communication box", "ABK · Design Studio of the Year 2017"],
     links: [["craft", "See the work in Craft →"]] },
   momo: { title: "Momo", when: "2018", role: "Hackathon team",
     text: "Winning project at the Idea for Tbilisi hackathon.",
@@ -1514,11 +1503,12 @@ const STOPS = {
     links: [["momo", "Open Momo →"]] },
   tbc: { title: "TBC Bank", when: "2021–22", role: "Product Owner → Product Lead, digital products for small and medium businesses",
     bullets: ["Digitized 250+ businesses with VISA during the lockdown: $1M+ extra revenue in 6 months", "Shipped Georgia’s first digital signature service for businesses", "Keynote at the World Bank IFC Caucasus conference"],
-    awards: [["Gold", "Best SME Project in the Caucasus by VISA: “E-Commerce in 3 Days”", "2021"], ["Winner", "TBC Bank Start-up Challenge (internal, among employees)", "2021"]] },
+    awards: [["Gold", "Best SME Project in the Caucasus by VISA: “E-Commerce in 3 Days”", "2021"], ["Winner", "TBC Bank Start-up Challenge (internal, among employees)", "2021"]],
+    photo: ["about/tbc-rfix-london-2022.jpg", "On stage at the 4th Annual RFIx Awards in London, holding the award", "E-Commerce in 3 Days · RFIx Awards, London, May 2022"] },
   econsul: { title: "eConsul", when: "2022 → now", role: "Co-founder · Head of Product",
     bullets: ["Georgia’s largest visa and immigration tech startup", "$500K+ annual revenue · 22 people · profitable within 3 months · NPS 79", "Spun off greencard.ge (10K+ users) and ePhoto.AI (8K+ users in year one)"],
     awards: [["Nominee", "Tourism Tech Innovation · National Tourism Awards Georgia", "2026"], ["Winner", "Tourism Tech Innovation of the Year", "2024"], ["Gold", "GITA top startup · $60K grant", "2022"]],
-    photo: ["ideas/econsul-team.jpg", "The eConsul team posing together in a sunlit forest", "The eConsul team"],
+    photo: ["about/award-gita-2022.jpg", "The eConsul team on stage holding the GITA matching grant cheque for 150,000 GEL", "GITA matching grant · 150,000 GEL · 2022"],
     links: [["econsul", "Open eConsul →"], ["greencard", "greencard.ge →"], ["ephoto", "ePhoto.AI →"]] },
   now: { title: "AI-built products", when: "Now · New York", role: "Building with LLMs, agents, workflow automation and rapid prototyping",
     text: "AI lets one person take an idea further, faster. New ideas land in the sky on the homepage as they launch.",
