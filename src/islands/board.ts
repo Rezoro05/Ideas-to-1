@@ -19,7 +19,9 @@ export type Board = {
 const NEW_NOTE_SPEED = 40;
 const REMOVE_FAILED = "Couldn’t remove it. Try again later.";
 
-export function startBoard(opts: { sky: Sky | null; store: Promise<IdeaStore>; random?: () => number }): Board {
+export type LetterHooks = { opened(ideaId: string): void; closed(): void };
+
+export function startBoard(opts: { sky: Sky | null; store: Promise<IdeaStore>; random?: () => number; letter?: LetterHooks }): Board {
   const { sky } = opts;
   const rand = opts.random ?? Math.random;
   let all = new Map<string, Note>();
@@ -97,10 +99,12 @@ export function startBoard(opts: { sky: Sky | null; store: Promise<IdeaStore>; r
     card.style.setProperty("--dx", origin ? origin.x - innerWidth / 2 + "px" : "0px");
     card.style.setProperty("--dy", origin ? origin.y - innerHeight / 2 + "px" : "0px");
     openWithTransition(letter);
+    opts.letter?.opened(n.id);
     byId("letter-close").focus({ preventScroll: true });
   }
   function closeLetter(): void {
     letter.classList.remove("open"); open = null;
+    opts.letter?.closed();
     setTimeout(() => { if (!letter.classList.contains("open")) letter.hidden = true; }, 300);
     if (returnFocus instanceof HTMLElement && returnFocus.isConnected) returnFocus.focus({ preventScroll: true });
   }

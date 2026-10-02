@@ -1,4 +1,5 @@
 ---
+import { COMMENT_LIMITS } from "../lib/comments";
 /* Hero compose overlay (holds the Idea Note while open), status toast, and the letter a caught note opens into. */
 ---
 <div class="letter compose" id="compose" role="dialog" aria-modal="true" aria-label="Share your idea" hidden><div class="note-slot" id="note-slot"></div></div>
@@ -14,5 +15,21 @@
       <button type="button" id="letter-refold">Fold it back and let it fly</button>
       <button type="button" class="danger" id="letter-remove" hidden>Remove this idea</button>
     </div>
+    <section class="thread" id="thread" aria-labelledby="thread-title">
+      <div class="thread-head"><h3 class="thread-title" id="thread-title">Comments</h3><span class="thread-count" id="thread-count"></span></div>
+      <p class="thread-status" id="thread-status" role="status" hidden></p>
+      <ol class="thread-list" id="thread-list"></ol>
+      <form class="thread-form" id="thread-form" novalidate>
+        <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="hp">
+        <label class="note-field" for="comment-msg"><span>Your comment</span>
+          <textarea id="comment-msg" name="message" rows="2" maxlength={COMMENT_LIMITS.message} placeholder="Add your thoughts"></textarea>
+        </label>
+        <label class="note-field" for="comment-name"><span>Your name <span class="opt">(optional, shown with your comment)</span></span>
+          <input id="comment-name" name="name" type="text" autocomplete="name" maxlength={COMMENT_LIMITS.name} placeholder="Nino Beridze">
+        </label>
+        <p class="note-error" id="comment-error" role="alert" hidden></p>
+        <button class="thread-send" type="submit">Add comment</button>
+      </form>
+    </section>
   </div>
 </div>

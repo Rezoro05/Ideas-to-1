@@ -1,12 +1,23 @@
 import { test, expect, type Page, type Route } from "@playwright/test";
 
 /** Fake the outside world: no real Supabase, Formspree or YouTube calls from tests. */
-type Board = { rows: { id: string; name: string; message: string; created_at: string }[]; down?: boolean; posts: unknown[]; deletes: unknown[]; mails: number };
+type Row = { id: string; name: string; message: string; created_at: string };
+type CommentRow = Row & { idea_id: string };
+type Board = { rows: Row[]; down?: boolean; posts: unknown[]; deletes: unknown[]; mails: number; comments?: CommentRow[]; commentsDown?: boolean; mailBodies?: string[] };
 async function fakeServices(page: Page, board: Board = { rows: [], posts: [], deletes: [], mails: 0 }) {
   await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
   await page.route("https://ssqcfsbkmrhjfylxghfj.supabase.co/**", async (r: Route) => {
     if (board.down) return r.fulfill({ status: 500, body: "down" });
     const url = r.request().url(), method = r.request().method();
+    if (url.includes("/rest/v1/comments") || url.includes("delete_comment")) {
+      board.comments ??= [];
+      if (board.commentsDown) return r.fulfill({ status: 500, body: "down" });
+      if (method === "GET") { const id = new URL(url).searchParams.get("idea_id")!.slice(3); return r.fulfill({ json: board.comments.filter((x) => x.idea_id === id) }); }
+      if (url.includes("delete_comment")) { const { p_id } = r.request().postDataJSON(); board.comments = board.comments.filter((x) => x.id !== p_id); return r.fulfill({ json: true }); }
+      const b = r.request().postDataJSON();
+      board.comments.push({ id: b.id, idea_id: b.idea_id, name: b.name, message: b.message, created_at: new Date().toISOString() });
+      return r.fulfill({ status: 201, body: "" });
+    }
     if (method === "GET") return r.fulfill({ json: board.rows });
     if (url.endsWith("/rest/v1/ideas")) {
       const body = r.request().postDataJSON();
@@ -17,7 +28,7 @@ async function fakeServices(page: Page, board: Board = { rows: [], posts: [], de
     if (url.endsWith("/rpc/delete_idea")) { board.deletes.push(r.request().postDataJSON()); return r.fulfill({ json: true }); }
     return r.fulfill({ status: 404 });
   });
-  await page.route("https://formspree.io/**", (r) => { board.mails++; return r.fulfill({ json: { ok: true } }); });
+  await page.route("https://formspree.io/**", (r) => { board.mails++; (board.mailBodies ??= []).push(r.request().postData() ?? ""); return r.fulfill({ json: { ok: true } }); });
   return board;
 }
 function watchErrors(page: Page) {
@@ -181,7 +192,7 @@ test("bots that fill the hidden field are ignored", async ({ page }) => {
   const board = await fakeServices(page);
   await page.goto("/");
   await page.locator("#note-msg").fill("spam");
-  await page.locator('input[name="_gotcha"]').evaluate((el: HTMLInputElement) => { el.value = "bot"; });
+  await page.locator('#note-form input[name="_gotcha"]').evaluate((el: HTMLInputElement) => { el.value = "bot"; });
   await page.locator(".note-send").click();
   await page.waitForTimeout(500);
   expect(board.posts).toHaveLength(0);
@@ -242,4 +253,100 @@ test("SEO basics: canonical, structured data, sitemap", async ({ page, request }
   expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap: https://revazkuparadze.com/sitemap.xml");
   // GitHub Pages hides folders starting with _ (like _astro/) unless .nojekyll is present
   expect((await request.get("/.nojekyll")).status()).toBe(200);
+});
+
+test.describe("comments on visitor ideas", () => {
+  const gio = (): Board => ({ rows: [{ id: "zzzzzz1", name: "Gio", message: "Night markets", created_at: "2026-09-30T10:00:00Z" }], posts: [], deletes: [], mails: 0,
+    comments: [{ id: "cmt0001", idea_id: "zzzzzz1", name: "Ana", message: "Yes please", created_at: "2026-09-30T11:00:00Z" }] });
+  async function openGio(page: Page) {
+    const note = page.locator(".plane.note-p");
+    await expect(note).toHaveCount(1);
+    await note.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#letter")).toBeVisible();
+  }
+
+  test("anyone reads the thread, adds a comment (emailed to Rez), and can remove only their own", async ({ page }) => {
+    const board = await fakeServices(page, gio());
+    await page.goto("/");
+    await openGio(page);
+    await expect(page.locator("#thread-count")).toHaveText("1 comment");
+    await expect(page.locator("#thread-list li")).toHaveCount(1);
+    await expect(page.locator("#thread-list li").first()).toContainText("Ana");
+    await expect(page.locator("#thread-list .c-remove")).toHaveCount(0);
+    await page.locator("#comment-msg").fill("I'd sell khachapuri there");
+    await page.locator("#comment-name").fill("Nino");
+    await page.locator(".thread-send").click();
+    await expect(page.locator("#thread-count")).toHaveText("2 comments");
+    const mine = page.locator("#thread-list li").nth(1);
+    await expect(mine).toContainText("I'd sell khachapuri there");
+    await expect(mine.locator(".c-remove")).toBeVisible();
+    await expect(page.locator("#comment-msg")).toHaveValue("");
+    expect(board.comments!.at(-1)).toMatchObject({ idea_id: "zzzzzz1", name: "Nino" });
+    await expect.poll(() => board.mails).toBe(1);
+    expect(board.mailBodies![0]).toContain("New comment on Idea1 from Nino");
+    await mine.locator(".c-remove").click();
+    await expect(page.locator("#thread-count")).toHaveText("1 comment");
+    expect(board.comments).toHaveLength(1);
+  });
+
+  test("comments stay after reopening the idea and reloading the page", async ({ page }) => {
+    await fakeServices(page, gio());
+    await page.goto("/");
+    await openGio(page);
+    await page.locator("#comment-msg").fill("Second thought");
+    await page.locator(".thread-send").click();
+    await expect(page.locator("#thread-count")).toHaveText("2 comments");
+    await page.reload();
+    await openGio(page);
+    await expect(page.locator("#thread-count")).toHaveText("2 comments");
+    await expect(page.locator("#thread-list li").nth(1).locator(".c-remove")).toBeVisible(); // still mine after reload
+  });
+
+  test("an empty comment asks for text; the bot trap posts nothing", async ({ page }) => {
+    const board = await fakeServices(page, gio());
+    await page.goto("/");
+    await openGio(page);
+    await page.locator(".thread-send").click();
+    await expect(page.locator("#comment-error")).toHaveText("Write your comment first.");
+    await page.locator("#comment-msg").fill("spam");
+    await page.locator('#thread-form input[name="_gotcha"]').evaluate((el: HTMLInputElement) => { el.value = "bot"; });
+    await page.locator(".thread-send").click();
+    await page.waitForTimeout(300);
+    expect(board.comments).toHaveLength(1);
+    expect(board.mails).toBe(0);
+  });
+
+  test("if comments can't load, the letter says so and hides the form", async ({ page }) => {
+    await fakeServices(page, { ...gio(), commentsDown: true });
+    await page.goto("/");
+    await openGio(page);
+    await expect(page.locator("#thread-status")).toContainText("couldn’t load");
+    await expect(page.locator("#thread-form")).toBeHidden();
+  });
+
+  test("a brand-new idea starts with no comments", async ({ page }) => {
+    await fakeServices(page);
+    await page.goto("/");
+    await page.locator("#note-msg").fill("Fresh idea");
+    await page.locator(".note-send").click();
+    const note = page.locator(".plane.note-p");
+    await expect(note).toHaveCount(1, { timeout: 8000 });
+    await note.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.locator("#thread-count")).toHaveText("No comments yet");
+  });
+
+  test.describe("on a phone", () => {
+    test.use({ viewport: { width: 390, height: 844 } });
+    test("the letter with comments fits and scrolls inside", async ({ page }) => {
+      await fakeServices(page, gio());
+      await page.goto("/");
+      await openGio(page);
+      const card = (await page.locator(".letter-card").boundingBox())!;
+      expect(card.width).toBeLessThanOrEqual(390);
+      await page.locator("#comment-msg").scrollIntoViewIfNeeded();
+      await expect(page.locator("#comment-msg")).toBeInViewport();
+    });
+  });
 });
