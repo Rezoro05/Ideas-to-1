@@ -240,4 +240,6 @@ test("SEO basics: canonical, structured data, sitemap", async ({ page, request }
   const sitemap = await (await request.get("/sitemap.xml")).text();
   for (const p of ["", "about/", "craft/", "econsul/", "ephoto/", "greencard/", "momo/"]) expect(sitemap).toContain(`<loc>https://revazkuparadze.com/${p}</loc>`);
   expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap: https://revazkuparadze.com/sitemap.xml");
+  // GitHub Pages hides folders starting with _ (like _astro/) unless .nojekyll is present
+  expect((await request.get("/.nojekyll")).status()).toBe(200);
 });
