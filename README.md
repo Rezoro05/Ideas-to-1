@@ -1,7 +1,5 @@
-# Ideas to 1
+# revazkuparadze.com
 
-Prototype of revazkuparadze.com: "Ideas to life". Idea planes you can drag, throw and open; a public Idea Note board; About and Craft pages.
+The built site (GitHub Pages). Idea planes you can drag, throw and open; a public idea board; About and Craft pages.
 
-It's a single static page: open `index.html`, or view it on revazkuparadze.com (GitHub Pages).
-
-Note: the shared idea board saves notes only when the page runs as a claude.ai artifact. On revazkuparadze.com (GitHub Pages), a sent idea flies for the visitor but isn't stored.
+These files are generated: the source (Astro, TypeScript, tests) is built and copied here. Don't edit them by hand.
