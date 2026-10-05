@@ -1,11 +1,25 @@
 ---
 import MultiTool from "./art/MultiTool.astro";
-import { WHO_I_AM, SKILLS } from "../content/home";
+import { href } from "../build-mode";
+import { WHO_I_AM, SKILLS, ROLES, STATS } from "../content/home";
+import { joinWithAnd } from "../lib/rotor";
 ---
 <section class="band tone tone-stone who" aria-labelledby="who-title">
+  <h2 id="who-title" class="who-title">Who I am</h2>
+  <ul class="stats" aria-label="In numbers">
+    {STATS.map((s) => (
+      <li><a class="stat" href={href(s.to)} data-route={s.to} title={`Proof: ${s.proof}`}>
+        <span class="stat-value">{s.value}</span><span class="stat-label">{s.label}</span>
+      </a></li>
+    ))}
+  </ul>
   <div class="who-grid">
     <div class="who-text">
-      <h2 id="who-title" class="who-title">Who I am</h2>
+      <p class="role-line">
+        <span class="sr-only">I’m {joinWithAnd(ROLES)}.</span>
+        <span aria-hidden="true">I’m <span class="rotor" id="role-rotor">{ROLES.map((r, i) => <span class:list={["rotor-role", { on: i === 0 }]}>{r}</span>)}</span></span>
+        <span class="roles-all" aria-hidden="true" hidden>I’m {joinWithAnd(ROLES)}.</span>
+      </p>
       <p>{WHO_I_AM}</p>
     </div>
     <div class="who-side">

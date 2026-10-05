@@ -168,6 +168,20 @@ test("the built site carries no idea-board services or code", () => {
   for (const gone of ["supabase", "formspree", "Idea Note", "Share Your Ideas", "note-form"]) expect(text, gone).not.toContain(gone);
 });
 
+test("Who I am: six numbers that link to their proof, and a role line that turns over", async ({ page }) => {
+  await fakeServices(page);
+  await page.goto("/");
+  await expect(page.locator(".stats .stat")).toHaveCount(6);
+  const shown = () => page.locator("#role-rotor .rotor-role.on").textContent();
+  const first = await shown();
+  expect(first).toBe("a Product Manager");
+  await expect.poll(shown, { timeout: 6000 }).not.toBe(first);
+  await expect(page.locator(".role-line .sr-only")).toHaveText("I’m a Product Manager, an AI Deployment Manager, a Creative Technologist and an AI Generalist.");
+  await page.locator('.stat[data-route="econsul"]').click();
+  await expect(page).toHaveURL(/\/econsul\/$/);
+  await expect(page.locator("#sheet-title")).toHaveText("eConsul");
+});
+
 test("About: a stop opens its story, again closes it, and its links lead on", async ({ page }) => {
   await fakeServices(page);
   await page.goto("/about/");
@@ -196,6 +210,8 @@ test.describe("reduced motion", () => {
     await expect(page).toHaveURL(/\/econsul\/$/);
     await page.locator("#back").click();
     await expect(page.locator("#sheet")).toBeHidden();
+    await expect(page.locator(".roles-all")).toBeVisible(); // no turning line: all roles at once
+    await expect(page.locator("#role-rotor")).toBeHidden();
   });
 });
 

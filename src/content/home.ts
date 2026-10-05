@@ -40,3 +40,18 @@ export const ABOUT_STORY = {
   started: "I’ve always been tech-savvy. It started with gaming, which soon turned into reinstalling Windows for neighbors and friends. That curiosity led me and my hacker friend Devi to co-found Georgia’s first tech education website. It fueled our passion for technology and won us a silver medal at Infomatrix, an international computer olympiad. That was my first taste of winning.",
   fresh: "Recently I won the Green Card Lottery through the platform I helped build, and made the leap from the small country of Georgia to the US. I packed up everything I had built over 30 years to start fresh. Now I’m here, on a new path to my American dream. I built this site to reach the people who will come along on this journey.",
 } as const;
+
+/** The rotating line in Who I am. Each phrase carries its own article so the sentence reads right ("a" / "an"). */
+export const ROLES: readonly string[] = ["a Product Manager", "an AI Deployment Manager", "a Creative Technologist", "an AI Generalist"];
+export const ROLE_INTERVAL_MS = 2600;
+
+/** Results strip at the top of Who I am. `to` is where the proof lives: a view ("about") or an idea ("econsul"). */
+export type Stat = { value: string; label: string; to: string; proof: string };
+export const STATS: readonly Stat[] = [
+  { value: "8+", label: "years building products", to: "about", proof: "The path so far, on About" },
+  { value: "3", label: "startups co-founded", to: "about", proof: "eConsul, greencard.ge and ePhoto.AI, on About" },
+  { value: "$500K+", label: "annual revenue at eConsul", to: "econsul", proof: "eConsul" },
+  { value: "18K+", label: "users across greencard.ge and ePhoto.AI", to: "about", proof: "10K+ greencard.ge and 8K+ ePhoto.AI, on About" },
+  { value: "$1M+", label: "new revenue for 250+ small businesses", to: "about", proof: "TBC Bank with VISA, on About" },
+  { value: "10+", label: "awards, 4 international", to: "about", proof: "Recognition on each stop, on About" },
+];
