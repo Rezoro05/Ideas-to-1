@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { esc, factsHtml, ideaExtraHtml, ideaEyebrow, ideaListHtml, ideaMediaHtml, planeLabel, planeTag, stopPanelHtml } from "../../src/lib/views";
-import { IDEAS, ideaBySlug } from "../../src/content/ideas";
+import { IDEAS, PARKED_IDEAS, ideaBySlug } from "../../src/content/ideas";
 import { STOPS, stopById } from "../../src/content/stops";
 
 describe("views", () => {
@@ -22,10 +22,10 @@ describe("views", () => {
     const gc = ideaMediaHtml(ideaBySlug("greencard")!);
     expect(gc).toContain('width="1400" height="802"');
     expect(gc).toContain('<figure class="logo-card"><img src="ideas/greencard-logo.svg"');
-    expect(ideaMediaHtml(ideaBySlug("momo")!)).not.toContain("logo-card");
+    expect(ideaMediaHtml(ideaBySlug("econsul")!)).not.toContain("logo-card");
   });
   it("idea list uses the given hrefs", () => {
-    expect(ideaListHtml([IDEAS[3]!], (s) => `#${s}`)).toContain('href="#momo" data-slug="momo"');
+    expect(ideaListHtml([IDEAS[2]!], (s) => `#${s}`)).toContain('href="#greencard" data-slug="greencard"');
   });
   it("stop panels show role, awards, links and photo", () => {
     const html = stopPanelHtml(stopById("econsul")!);
@@ -56,8 +56,19 @@ describe("content integrity", () => {
   });
 });
 
+describe("parked ideas", () => {
+  it("Momo is parked: no plane, page or list entry until it has content", () => {
+    expect(IDEAS.map((i) => i.slug)).toEqual(["econsul", "ephoto", "greencard"]);
+    expect(ideaBySlug("momo")).toBeUndefined();
+    expect(PARKED_IDEAS.map((i) => i.slug)).toContain("momo");
+  });
+  it("no About panel links to a parked idea", () => {
+    for (const st of STOPS) for (const [target] of st.links ?? []) expect(PARKED_IDEAS.map((i) => i.slug)).not.toContain(target);
+  });
+});
+
 describe("ideaExtraHtml", () => {
-  it("is empty for an idea with no highlight or notice", () => expect(ideaExtraHtml(ideaBySlug("momo")!)).toBe(""));
+  it("is empty for an idea with no highlight or notice", () => expect(ideaExtraHtml(ideaBySlug("ephoto")!)).toBe(""));
   it("greencard.ge: highlights the move to the USA and cites why it stopped, word for word", () => {
     const html = ideaExtraHtml(ideaBySlug("greencard")!);
     expect(html).toContain('class="highlight"');
@@ -67,7 +78,7 @@ describe("ideaExtraHtml", () => {
     expect(html.indexOf("highlight")).toBeLessThan(html.indexOf("notice"));
   });
   it("escapes its text", () => {
-    const idea = { ...ideaBySlug("momo")!, highlight: "<b>x</b>" };
+    const idea = { ...ideaBySlug("ephoto")!, highlight: "<b>x</b>" };
     expect(ideaExtraHtml(idea)).toContain("&lt;b&gt;");
   });
 });

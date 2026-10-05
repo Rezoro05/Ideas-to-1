@@ -75,7 +75,7 @@ export function createRouter(mode: UrlMode): Router {
     for (const [k, el] of Object.entries(views)) el.hidden = k !== view;
     document.querySelectorAll<HTMLElement>("[data-route]").forEach((a) => a.toggleAttribute("aria-current", a.dataset.route === view && !route.idea));
     if (route.idea) openIdea(route.idea);
-    else { if (!sheet.hidden) closeIdea(); document.title = TITLES[view]; }
+    else { if (!sheet.hidden) closeIdea(); document.title = KNOWN.includes(nameNow()) ? TITLES[view] : PAGE_META.notFound.title; }
     if (changed) window.scrollTo(0, 0);
   }
 

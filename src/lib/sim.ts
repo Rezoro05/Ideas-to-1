@@ -50,7 +50,7 @@ export function wanderSteer(plane: Plane, world: World, config: FlightConfig): V
 export function separationSteer(plane: Plane, others: readonly Plane[], config: FlightConfig): Vec {
   let push = v(0, 0);
   for (const o of others) {
-    const d = sub(plane.position, o.position), dist = len(d);
+    const d = sub(plane.position, o.position), dist = Math.hypot(d.x * config.separationXScale, d.y);
     if (dist > 0.001 && dist < config.shieldRadius) {
       push = add(push, scale(d, (((config.shieldRadius - dist) / config.shieldRadius) * 90) / dist));
     }

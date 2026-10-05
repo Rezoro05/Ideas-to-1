@@ -21,7 +21,6 @@ test.describe("pages by URL", () => {
     ["/about/", "About · Revaz Kuparadze", "#view-about"],
     ["/craft/", "Craft · Revaz Kuparadze", "#view-craft"],
     ["/econsul/", "eConsul · Revaz Kuparadze", "#sheet"],
-    ["/momo/", "Momo · Revaz Kuparadze", "#sheet"],
   ] as const) {
     test(`${path} opens with its own content and no errors`, async ({ page }) => {
       await fakeServices(page);
@@ -38,6 +37,8 @@ test.describe("pages by URL", () => {
     const res = await page.goto("/nope/");
     expect(res?.status()).toBe(404);
     await expect(page.locator("#view-home")).toBeVisible();
+    await expect(page).toHaveTitle("Page not found · Revaz Kuparadze");
+    await expect(page.locator("#sheet")).toBeHidden();
   });
   test("pages read without JavaScript", async ({ browser }) => {
     const ctx = await browser.newContext({ javaScriptEnabled: false });
@@ -121,7 +122,7 @@ test("planes always fly right side up (belly down), whichever way they head", as
         if (m.a > 0.5) sawRight = true;
       }
     }
-    return { min, sawLeft, sawRight, rollingShare: rolling / (frames * 4) };
+    return { min, sawLeft, sawRight, rollingShare: rolling / (frames * document.querySelectorAll(".plane").length) };
   });
   expect(worst, JSON.stringify(worst)).toMatchObject({ sawLeft: true }); // the check saw a flipped, left-heading plane
   expect(worst.min).toBeGreaterThan(-0.27);
@@ -132,7 +133,7 @@ test("planes can be dragged and thrown", async ({ page }) => {
   await fakeServices(page);
   await page.goto("/");
   await page.waitForTimeout(400);
-  const plane = page.locator('.plane[data-slug="momo"]');
+  const plane = page.locator('.plane[data-slug="greencard"]');
   await plane.focus(); // pause it so we can grab it reliably
   const box = (await plane.boundingBox())!;
   const x0 = box.x + box.width / 2, y0 = box.y + box.height / 2;
@@ -150,7 +151,7 @@ test("no public idea board: no note, no visitor planes, no outside services; boo
   const errors = watchErrors(page);
   await page.goto("/");
   await page.waitForTimeout(1500);
-  await expect(page.locator(".plane")).toHaveCount(4);
+  await expect(page.locator(".plane")).toHaveCount(3); // Momo is parked
   await expect(page.locator("#note-form, #compose, #letter, #idea-btn, #notes-list")).toHaveCount(0);
   await expect(page.getByText("Share Your Ideas")).toHaveCount(0);
   await expect(page.locator("#call-title")).toHaveText("Have an Idea?");
@@ -208,6 +209,32 @@ test.describe("phone", () => {
       expect(sw).toBeLessThanOrEqual(cw);
     });
   }
+  test("plane labels stay on screen", async ({ page }) => {
+    test.setTimeout(30_000);
+    await fakeServices(page);
+    await page.goto("/");
+    const worst = await page.evaluate(async () => {
+      const field = document.getElementById("field")!.getBoundingClientRect();
+      let out = 0;
+      const start = performance.now();
+      while (performance.now() - start < 6000) {
+        await new Promise(requestAnimationFrame);
+        for (const t of document.querySelectorAll<HTMLElement>(".plane .tag")) {
+          const r = t.getBoundingClientRect();
+          out = Math.max(out, field.left - r.left, r.right - field.right);
+        }
+      }
+      return out;
+    });
+    expect(worst).toBeLessThanOrEqual(1);
+  });
+  test("menu and footer links are easy to tap (44px tall)", async ({ page }) => {
+    await fakeServices(page);
+    await page.goto("/");
+    for (const sel of [".nav a", ".foot a", ".home-link"]) {
+      for (const box of await page.locator(sel).evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height))) expect(box, sel).toBeGreaterThanOrEqual(44);
+    }
+  });
 });
 
 test("SEO basics: canonical, structured data, sitemap", async ({ page, request }) => {
@@ -216,7 +243,8 @@ test("SEO basics: canonical, structured data, sitemap", async ({ page, request }
   const ld = JSON.parse((await page.locator('script[type="application/ld+json"]').textContent())!);
   expect(ld["@graph"].map((x: { "@type": string }) => x["@type"])).toEqual(["Person", "WebPage", "CreativeWork"]);
   const sitemap = await (await request.get("/sitemap.xml")).text();
-  for (const p of ["", "about/", "craft/", "econsul/", "ephoto/", "greencard/", "momo/"]) expect(sitemap).toContain(`<loc>https://revazkuparadze.com/${p}</loc>`);
+  expect(sitemap).not.toContain("momo");
+  for (const p of ["", "about/", "craft/", "econsul/", "ephoto/", "greencard/"]) expect(sitemap).toContain(`<loc>https://revazkuparadze.com/${p}</loc>`);
   expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap: https://revazkuparadze.com/sitemap.xml");
   for (const icon of ["/favicon.ico", "/favicon-32.png", "/apple-touch-icon.png"]) expect((await request.get(icon)).status()).toBe(200);
   await expect(page.locator('link[rel="icon"]').first()).toHaveAttribute("href", "favicon.ico");

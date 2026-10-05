@@ -4,6 +4,7 @@ import { classifyGesture, movedFarEnough, type PointerMark } from "../lib/gestur
 import type { FlightConfig } from "../lib/motion";
 import { PLANE_SVG } from "../lib/plane-svg";
 import { rollDeg, shouldMirror, stepRoll } from "../lib/attitude";
+import { labelSide, type LabelSide } from "../lib/labels";
 import { headingDeg, len, v, type Vec } from "../lib/vec";
 
 export type PlaneSpec = { tag: string; label: string; href: string };
@@ -12,6 +13,8 @@ export type Sky = { bounds(): Bounds };
 
 /** Planes keep their last heading when they slow below this speed, so they don't spin in place. */
 const MIN_SPEED_FOR_HEADING = 6;
+/** Space between a plane and its label; matches the CSS offset. */
+const LABEL_GAP_PX = 4;
 /** Depth for the 3D roll: small enough that the near wing visibly swings toward the viewer. */
 const ROLL_PERSPECTIVE_PX = 160;
 
@@ -26,7 +29,7 @@ export function startSky(opts: {
   const { field, config } = opts;
   const bounds = (): Bounds => ({ width: field.clientWidth, height: field.clientHeight });
   let world: World = createWorld(opts.ideas.map((i) => i.slug), opts.visitSeed, bounds(), config);
-  const els = new Map<string, HTMLAnchorElement>(), angles = new Map<string, number>(), mirrored = new Map<string, boolean>(), rolls = new Map<string, number>();
+  const els = new Map<string, HTMLAnchorElement>(), angles = new Map<string, number>(), mirrored = new Map<string, boolean>(), rolls = new Map<string, number>(), sides = new Map<string, LabelSide>(), labelWidths = new Map<string, number>();
   const pausedSlugs = new Set<string>(); // keyboard focus only; hover just recolors
   let held: Held | null = null, press: (PointerMark & { slug: string }) | null = null, suppressClick = false;
 
@@ -101,6 +104,10 @@ export function startSky(opts: {
         rolls.set(p.slug, roll);
         el.dataset.mirrored = String(flip);
         el.dataset.rolling = String(roll !== (flip ? 1 : 0));
+        const fieldWidth = field.clientWidth;
+        if (!labelWidths.has(p.slug)) labelWidths.set(p.slug, (el.querySelector(".tag") as HTMLElement).offsetWidth);
+        const side = labelSide(sides.get(p.slug) ?? "right", { x: p.position.x, fieldWidth, labelWidth: labelWidths.get(p.slug)!, planeHalf: config.planeSize / 2, gap: LABEL_GAP_PX });
+        if (side !== sides.get(p.slug)) { sides.set(p.slug, side); el.classList.toggle("tag-left", side === "left"); }
         el.style.transform = `translate3d(${p.position.x}px, ${p.position.y}px, 0)`;
         (el.firstElementChild as HTMLElement).style.transform = `perspective(${ROLL_PERSPECTIVE_PX}px) rotate(${angle}deg) rotateX(${rollDeg(roll)}deg)`;
       }

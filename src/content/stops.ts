@@ -46,7 +46,6 @@ export const STOPS: readonly Stop[] = [
     text: "Winning project at the Idea for Tbilisi hackathon.",
     awards: [["1st place", "Idea for Tbilisi hackathon · 3,000 GEL prize", "2018"]],
     photo: { src: "about/award-idea-for-tbilisi-2018.jpg", alt: "Holding the Idea for Tbilisi first-place cheque, 3,000 GEL", caption: "Idea for Tbilisi 2018", w: 720, h: 960 },
-    links: [["momo", "Open Momo →"]],
   },
   {
     id: "tbc", year: "2021", name: "TBC Bank", desc: "Product Owner → Product Lead · VISA Best SME Project",

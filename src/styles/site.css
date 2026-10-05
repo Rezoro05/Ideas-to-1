@@ -80,6 +80,7 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .plane .tag { position: absolute; left: calc(var(--s) / 2 + 4px); top: -8px; white-space: nowrap;
   font: 500 11px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--graphite);
   pointer-events: none; transition: color .2s; }
+.plane.tag-left .tag { left: auto; right: calc(var(--s) / 2 + 4px); }
 .plane:hover .tag, .plane:focus-visible .tag, .plane.held .tag { color: var(--accent); }
 .plane:hover .pf, .plane:focus-visible .pf, .plane.held .pf { fill: var(--accent); stroke: var(--paper); }
 .plane:focus-visible .body { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 50%; }
@@ -245,6 +246,9 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
 .nav { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
 .nav a { color: var(--graphite); text-decoration: none; font: 500 11px/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase; }
 .nav a:hover, .nav a:focus-visible, .nav a[aria-current="page"] { color: var(--ink); }
+/* Touch: at least 44px tall hit areas, without moving the layout */
+.nav a, .foot a { display: inline-block; padding: 17px 5px; margin: -17px -5px; }
+.home-link { padding-block: 13px; margin-block: -13px; }
 .nav .nav-cta { color: var(--accent); }
 /* Phones: logo and menu on one line */
 @media (max-width: 560px) {

@@ -51,6 +51,15 @@ describe("steering", () => {
     expect(separationSteer(a, [{ slug: "b", position: v(150, 100), velocity: v(0, 0) }], config).x).toBeLessThan(0);
     expect(separationSteer(a, [{ slug: "b", position: v(100 + config.shieldRadius + 1, 100), velocity: v(0, 0) }], config)).toEqual(v(0, 0));
   });
+  it("on phones, side-by-side planes repel from farther away than stacked ones (labels sit to the side)", () => {
+    const lite = FLIGHT_CONFIGS.lite, a = { slug: "a", position: v(100, 100), velocity: v(0, 0) };
+    const beside = { slug: "b", position: v(100 + lite.shieldRadius + 20, 100), velocity: v(0, 0) };
+    const below = { slug: "b", position: v(100, 100 + lite.shieldRadius + 20), velocity: v(0, 0) };
+    expect(separationSteer(a, [beside], lite).x).toBeLessThan(0);
+    expect(separationSteer(a, [below], lite)).toEqual(v(0, 0));
+    const besideFar = { slug: "b", position: v(100 + config.shieldRadius + 1, 100), velocity: v(0, 0) };
+    expect(separationSteer(a, [besideFar], config)).toEqual(v(0, 0)); // desktop: round shield, unchanged
+  });
   it("containWithin clamps and bounces at half speed", () => {
     const p = containWithin({ slug: "a", position: v(-20, 700), velocity: v(-100, 50) }, bounds);
     expect(p.position).toEqual(v(EDGE_INSET, bounds.height - EDGE_INSET));

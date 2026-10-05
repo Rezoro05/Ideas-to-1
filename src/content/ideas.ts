@@ -92,6 +92,10 @@ export const IDEAS: readonly Idea[] = [
       { src: "ideas/greencard-logo.svg", w: 277, h: 39, alt: "greencard.ge logo", caption: "The greencard.ge logo", logo: true },
     ],
   },
+];
+
+/** Ideas kept for later but not shown anywhere (no plane, page, list or sitemap entry). Move one into IDEAS to publish it. */
+export const PARKED_IDEAS: readonly Idea[] = [
   {
     slug: "momo", title: "Momo", year: "2018", line: "Hackathon winner at Idea for Tbilisi.",
     lede: "Winning project at the Idea for Tbilisi 2018 hackathon. Full write-up coming.",
