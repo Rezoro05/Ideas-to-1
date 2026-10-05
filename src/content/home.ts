@@ -20,7 +20,7 @@ export const LOGOS: readonly Logo[] = [
   { name: "ePhoto.AI", href: "https://ephoto.ai/app", role: "Co-founder" }, // text logo
 ];
 
-export const WHO_I_AM = "I’m a product and growth professional with 8+ years of experience building businesses, shaping customer experiences, and turning ideas into products that create measurable value. My background spans both startups and large organizations, giving me a practical understanding of how to move from strategy to execution and build solutions people actually use.";
+export const WHO_I_AM = "8+ years of experience building businesses, shaping customer experiences, and turning ideas into products that create measurable value. My background spans both startups and large organizations, giving me a practical understanding of how to move from strategy to execution and build solutions people actually use.";
 
 export const SKILLS: readonly string[] = [
   "Product Strategy", "Product Management", "Growth Strategy", "Customer Experience", "Go-to-Market", "Business Development",
