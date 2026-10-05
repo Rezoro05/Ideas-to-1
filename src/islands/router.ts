@@ -2,7 +2,7 @@
 import { IDEA_SLUGS, ideaBySlug } from "../content/ideas";
 import { PAGE_META, SITE } from "../content/site";
 import { hrefFor, legacyHashTarget, nameFromLocation, routeFromName, VIEWS, type UrlMode, type View } from "../lib/routing";
-import { factsHtml, ideaEyebrow, ideaLinkText, ideaMediaHtml } from "../lib/views";
+import { factsHtml, ideaEyebrow, ideaExtraHtml, ideaLinkText, ideaMediaHtml } from "../lib/views";
 import type { Vec } from "../lib/vec";
 import { byId, closeAfterTransition, openWithTransition } from "./dom";
 
@@ -39,6 +39,7 @@ export function createRouter(mode: UrlMode): Router {
     byId("sheet-eyebrow").textContent = ideaEyebrow(idea);
     byId("sheet-title").textContent = idea.title;
     byId("sheet-lede").textContent = idea.lede;
+    byId("sheet-extra").innerHTML = ideaExtraHtml(idea);
     byId("sheet-facts").innerHTML = factsHtml(idea.facts);
     const icon = byId<HTMLImageElement>("sheet-icon");
     icon.hidden = !idea.icon;

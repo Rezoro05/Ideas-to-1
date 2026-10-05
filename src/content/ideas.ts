@@ -1,7 +1,9 @@
 /** The ideas flying in the hero. Order = plane numbers (01, 02 ...). Adding an idea = adding one entry. */
 
 export type Fact = readonly [label: string, value: string | readonly string[]];
-export type Media = { src: string; w: number; h: number; alt: string; caption: string; wide?: boolean };
+export type Media = { src: string; w: number; h: number; alt: string; caption: string; wide?: boolean; /** a logo: shown small on a white card */ logo?: boolean };
+/** A dated status note with the exact words of its source, e.g. why a project stopped. */
+export type Notice = { label: string; text: string; quote: string; by: string; date: string; sourceUrl: string; sourceLabel: string };
 export type Idea = {
   slug: string;
   title: string;
@@ -12,6 +14,9 @@ export type Idea = {
   url?: string;
   urlLabel?: string;
   icon?: string;
+  /** One line that matters most, shown large under the lede. */
+  highlight?: string;
+  notice?: Notice;
   media?: readonly Media[];
 };
 
@@ -60,10 +65,20 @@ export const IDEAS: readonly Idea[] = [
   {
     slug: "greencard", title: "greencard.ge", year: "—", line: "Fill & Win: the US Green Card lottery in one place.",
     url: "https://greencard.ge/en", urlLabel: "greencard.ge",
-    lede: "Everything you need for the US Green Card lottery in one place: fill out the application, take the official photo on your phone, and pay. The mission is to make the lottery accessible to everyone and create equal opportunities with technology. A sub-business of eConsul. I was a beta tester, and I won.",
+    lede: "Everything you need for the US Green Card lottery in one place: fill out the application, take the official photo on your phone, and pay. The mission is to make the lottery accessible to everyone and create equal opportunities with technology. A sub-business of eConsul.",
+    highlight: "The project that got me to the USA: I was its beta tester, and I won the Green Card.",
+    notice: {
+      label: "Why it stopped",
+      text: "In December 2025 the US government paused the Diversity Visa (Green Card) lottery, so greencard.ge stopped taking applications.",
+      quote: "At President Trump’s direction, I am immediately directing USCIS to pause the DV1 program to ensure no more Americans are harmed by this disastrous program.",
+      by: "Kristi Noem, US Secretary of Homeland Security",
+      date: "19 December 2025",
+      sourceUrl: "https://x.com/Sec_Noem/status/2001873077089767435",
+      sourceLabel: "Statement on X",
+    },
     facts: [
       ["Role", "🚀 Co-Founder · 💡 Head of Product"],
-      ["Traction", "10K+ users · customer base up 120% in 2 years"],
+      ["Traction", "10K+ users"],
       ["Tagline", "Fill & Win"],
       ["Press", "Featured in Forbes Georgia and Entrepreneur Georgia"],
       ["How it works", [
@@ -71,6 +86,10 @@ export const IDEAS: readonly Idea[] = [
         "Take the official photo at home with your phone",
         "Pay, and get status checks and support for winners",
       ]],
+    ],
+    media: [
+      { src: "ideas/greencard-home.jpg", w: 1400, h: 802, alt: "greencard.ge home page: “Complete & Win” headline, a Submit button, and the Statue of Liberty drawing a flag from a lottery box", caption: "greencard.ge · Complete & Win", wide: true },
+      { src: "ideas/greencard-logo.svg", w: 277, h: 39, alt: "greencard.ge logo", caption: "The greencard.ge logo", logo: true },
     ],
   },
   {

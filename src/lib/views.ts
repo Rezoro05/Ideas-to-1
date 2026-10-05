@@ -20,9 +20,21 @@ export function factsHtml(facts: readonly Fact[]): string {
 
 const size = (w?: number, h?: number): string => (w && h ? ` width="${w}" height="${h}"` : "");
 
+/** The highlight line and the status notice, in that order; empty when an idea has neither. */
+export function ideaExtraHtml(idea: Idea): string {
+  const hi = idea.highlight ? `<p class="highlight">${esc(idea.highlight)}</p>` : "";
+  const n = idea.notice;
+  const notice = n
+    ? `<aside class="notice" aria-label="${esc(n.label)}"><p class="notice-label">${esc(n.label)}</p><p>${esc(n.text)}</p>`
+      + `<blockquote cite="${esc(n.sourceUrl)}"><p>“${esc(n.quote)}”</p></blockquote>`
+      + `<p class="notice-cite">${esc(n.by)}, ${esc(n.date)} · <a href="${esc(n.sourceUrl)}" target="_blank" rel="noopener">${esc(n.sourceLabel)}</a></p></aside>`
+    : "";
+  return hi + notice;
+}
+
 export function ideaMediaHtml(idea: Idea): string {
   return (idea.media ?? []).map((m) =>
-    `<figure><img src="${esc(m.src)}"${size(m.w, m.h)} alt="${esc(m.alt)}" loading="lazy"><figcaption>${esc(m.caption)}</figcaption></figure>`).join("");
+    `<figure${m.logo ? ' class="logo-card"' : ""}><img src="${esc(m.src)}"${size(m.w, m.h)} alt="${esc(m.alt)}" loading="lazy"><figcaption>${esc(m.caption)}</figcaption></figure>`).join("");
 }
 
 export function ideaListHtml(ideas: readonly Idea[], hrefFor: (slug: string) => string): string {

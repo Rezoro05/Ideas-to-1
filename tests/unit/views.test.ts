@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { esc, factsHtml, ideaEyebrow, ideaListHtml, ideaMediaHtml, planeLabel, planeTag, stopPanelHtml } from "../../src/lib/views";
+import { esc, factsHtml, ideaExtraHtml, ideaEyebrow, ideaListHtml, ideaMediaHtml, planeLabel, planeTag, stopPanelHtml } from "../../src/lib/views";
 import { IDEAS, ideaBySlug } from "../../src/content/ideas";
 import { STOPS, stopById } from "../../src/content/stops";
 
@@ -19,7 +19,10 @@ describe("views", () => {
   });
   it("media carries sizes so the page doesn't jump", () => {
     expect(ideaMediaHtml(ideaBySlug("econsul")!)).toContain('width="1400" height="934"');
-    expect(ideaMediaHtml(ideaBySlug("greencard")!)).toBe("");
+    const gc = ideaMediaHtml(ideaBySlug("greencard")!);
+    expect(gc).toContain('width="1400" height="802"');
+    expect(gc).toContain('<figure class="logo-card"><img src="ideas/greencard-logo.svg"');
+    expect(ideaMediaHtml(ideaBySlug("momo")!)).not.toContain("logo-card");
   });
   it("idea list uses the given hrefs", () => {
     expect(ideaListHtml([IDEAS[3]!], (s) => `#${s}`)).toContain('href="#momo" data-slug="momo"');
@@ -50,5 +53,21 @@ describe("content integrity", () => {
   it("every image has alt text and a size", () => {
     for (const i of IDEAS) for (const m of i.media ?? []) { expect(m.alt.length).toBeGreaterThan(10); expect(m.w * m.h).toBeGreaterThan(0); }
     for (const s of STOPS) if (s.photo) { expect(s.photo.alt.length).toBeGreaterThan(10); expect(s.photo.w * s.photo.h).toBeGreaterThan(0); }
+  });
+});
+
+describe("ideaExtraHtml", () => {
+  it("is empty for an idea with no highlight or notice", () => expect(ideaExtraHtml(ideaBySlug("momo")!)).toBe(""));
+  it("greencard.ge: highlights the move to the USA and cites why it stopped, word for word", () => {
+    const html = ideaExtraHtml(ideaBySlug("greencard")!);
+    expect(html).toContain('class="highlight"');
+    expect(html).toContain("got me to the USA");
+    expect(html).toContain("I am immediately directing USCIS to pause the DV1 program");
+    expect(html).toContain('href="https://x.com/Sec_Noem/status/2001873077089767435"');
+    expect(html.indexOf("highlight")).toBeLessThan(html.indexOf("notice"));
+  });
+  it("escapes its text", () => {
+    const idea = { ...ideaBySlug("momo")!, highlight: "<b>x</b>" };
+    expect(ideaExtraHtml(idea)).toContain("&lt;b&gt;");
   });
 });
