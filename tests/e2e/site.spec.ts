@@ -98,6 +98,29 @@ test("an idea plane opens its page, and Back returns to the sky", async ({ page 
   await expect(page.locator("#sheet")).toBeHidden();
 });
 
+test("planes always fly right side up (belly down), whichever way they head", async ({ page }) => {
+  await fakeServices(page);
+  await page.goto("/");
+  /* Local "up" (0,-1) through the body's transform has screen y = -d. Upright means it points up, allowing the
+     hysteresis band near vertical, where |cos(heading)| <= sin(15deg) ~ 0.26. */
+  const worst = await page.evaluate(async () => {
+    let min = 1, sawLeft = false, sawRight = false;
+    const end = performance.now() + 4000;
+    while (performance.now() < end) {
+      await new Promise(requestAnimationFrame);
+      for (const body of document.querySelectorAll<HTMLElement>(".plane .body")) {
+        const m = new DOMMatrix(getComputedStyle(body).transform);
+        min = Math.min(min, m.d);
+        if (m.a < -0.5) sawLeft = true;
+        if (m.a > 0.5) sawRight = true;
+      }
+    }
+    return { min, sawLeft, sawRight };
+  });
+  expect(worst.sawLeft && worst.sawRight).toBe(true); // the check saw planes heading both ways
+  expect(worst.min).toBeGreaterThan(-0.27);
+});
+
 test("planes can be dragged and thrown", async ({ page }) => {
   await fakeServices(page);
   await page.goto("/");
