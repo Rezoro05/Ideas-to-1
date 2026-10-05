@@ -182,6 +182,17 @@ test("Who I am: six numbers that link to their proof, and a role line that turns
   await expect(page.locator("#sheet-title")).toHaveText("eConsul");
 });
 
+test("intro: logo mark, then REVAZ and KUPARADZE, then the page; it never blocks clicks", async ({ page }) => {
+  await fakeServices(page);
+  await page.goto("/");
+  const loader = page.locator(".loader");
+  await expect(loader.locator(".ld-first, .ld-mark, .ld-last")).toHaveCount(3);
+  expect(await loader.evaluate((el) => getComputedStyle(el).pointerEvents)).toBe("none");
+  await expect(loader).toBeHidden({ timeout: 4000 }); // gone after the intro
+  // the header and footer logo still render from the same logo image
+  for (const sel of [".bar .brand", ".foot .brand"]) expect(await page.locator(sel).evaluate((el) => getComputedStyle(el).maskImage || getComputedStyle(el).webkitMaskImage)).toContain("data:image/png");
+});
+
 test("About: a stop opens its story, again closes it, and its links lead on", async ({ page }) => {
   await fakeServices(page);
   await page.goto("/about/");
@@ -212,6 +223,7 @@ test.describe("reduced motion", () => {
     await expect(page.locator("#sheet")).toBeHidden();
     await expect(page.locator(".roles-all")).toBeVisible(); // no turning line: all roles at once
     await expect(page.locator("#role-rotor")).toBeHidden();
+    await expect(page.locator(".loader")).toBeHidden(); // no intro with reduced motion
   });
 });
 
