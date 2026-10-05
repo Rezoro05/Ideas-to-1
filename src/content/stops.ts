@@ -1,7 +1,7 @@
 /** About page: "The path so far". Each stop is a point on the line and the panel it opens. */
 
 export type Award = readonly [medal: string, what: string, year: string];
-export type Photo = { src: string; alt: string; caption: string; w: number; h: number };
+export type Photo = { src: string; alt: string; caption: string; w: number; h: number; /** a view or idea the photo opens when clicked */ link?: string };
 /** A panel link goes to a view ("craft", "home") or opens an idea ("econsul"). */
 export type PanelLink = readonly [target: string, label: string];
 export type Branch = { target: string; name: string; desc: string };
@@ -48,25 +48,26 @@ export const STOPS: readonly Stop[] = [
     photo: { src: "about/award-idea-for-tbilisi-2018.jpg", alt: "Holding the Idea for Tbilisi first-place cheque, 3,000 GEL", caption: "Idea for Tbilisi 2018", w: 720, h: 960 },
   },
   {
-    id: "tbc", year: "2021", name: "TBC Bank", desc: "Product Owner → Product Lead · VISA Best SME Project",
-    title: "TBC Bank", when: "2021–22", role: "Product Owner → Product Lead, digital products for small and medium businesses",
+    id: "tbc", year: "2021–2022", name: "TBC Bank", desc: "Product Owner → Product Lead · VISA Best SME Project",
+    title: "TBC Bank", when: "2021–2022", role: "Product Owner → Product Lead, digital products for small and medium businesses",
     bullets: ["Digitized 250+ businesses with VISA during the lockdown: $1M+ extra revenue in 6 months", "Shipped Georgia’s first digital signature service for businesses", "Keynote at the World Bank IFC Caucasus conference"],
     awards: [["Gold", "Best SME Project in the Caucasus by VISA: “E-Commerce in 3 Days”", "2021"], ["Winner", "TBC Bank Start-up Challenge (internal, among employees)", "2021"]],
     photo: { src: "about/tbc-rfix-london-2022.jpg", alt: "On stage at the 4th Annual RFIx Awards in London, holding the award", caption: "E-Commerce in 3 Days · London, May 2022", w: 1182, h: 1182 },
   },
   {
-    id: "econsul", year: "2022", name: "eConsul", desc: "Co-founder · $500K+ a year, 22 people",
+    id: "econsul", year: "2022–2026", name: "eConsul", desc: "Co-founder · $500K+ a year, 22 people",
     branches: [{ target: "greencard", name: "greencard.ge", desc: "10K+ users" }, { target: "ephoto", name: "ePhoto.AI", desc: "8K+ users in year one" }],
-    title: "eConsul", when: "2022 → now", role: "Co-founder · Head of Product",
+    title: "eConsul", when: "2022–2026", role: "Co-founder · Head of Product",
     bullets: ["Georgia’s largest visa and immigration tech startup", "$500K+ annual revenue · 22 people · profitable within 3 months · NPS 79", "Spun off greencard.ge (10K+ users) and ePhoto.AI (8K+ users in year one)"],
     awards: [["Nominee", "Tourism Tech Innovation · National Tourism Awards Georgia", "2026"], ["Winner", "Tourism Tech Innovation of the Year", "2024"], ["Gold", "GITA top startup · $60K grant", "2022"]],
     photo: { src: "about/award-gita-2022.jpg", alt: "The eConsul team on stage holding the GITA matching grant cheque for 150,000 GEL", caption: "GITA matching grant · 150,000 GEL · 2022", w: 1400, h: 933 },
     links: [["econsul", "Open eConsul →"], ["greencard", "greencard.ge →"], ["ephoto", "ePhoto.AI →"]],
   },
   {
-    id: "now", year: "Now · New York", name: "AI-built products", desc: "LLMs, agents, automation", isNow: true,
-    title: "AI-built products", when: "Now · New York", role: "Building with LLMs, agents, workflow automation and rapid prototyping",
+    id: "now", year: "2026–now · New York", name: "AI-built products", desc: "LLMs, agents, automation", isNow: true,
+    title: "AI-built products", when: "2026–now · New York", role: "Building with LLMs, agents, workflow automation and rapid prototyping",
     text: "AI lets one person take an idea further, faster. New ideas land in the sky on the homepage as they launch.",
+    photo: { src: "ideas/ideasky-sky.jpg", alt: "IDEA SKY: paper planes, airplanes and a bird flying over an illustrated New York skyline", caption: "IDEA SKY · ideas in flight over New York", w: 1400, h: 875, link: "ideasky" },
     links: [["ideasky", "Open IDEA SKY →"], ["home", "See the ideas in the sky →"]],
   },
 ];

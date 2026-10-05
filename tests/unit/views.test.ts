@@ -56,6 +56,16 @@ describe("content integrity", () => {
   });
 });
 
+describe("stop photo links", () => {
+  it("a stop photo with a link is a button that opens it; others are plain images", () => {
+    expect(stopPanelHtml(stopById("now")!)).toContain('<button class="panel-link panel-photo" type="button" data-target="ideasky"><img src="ideas/ideasky-sky.jpg"');
+    expect(stopPanelHtml(stopById("tbc")!)).not.toContain("panel-photo");
+  });
+  it("the path shows the years Rez gave", () => {
+    expect([stopById("tbc")!.year, stopById("econsul")!.year, stopById("now")!.year]).toEqual(["2021–2022", "2022–2026", "2026–now · New York"]);
+  });
+});
+
 describe("parked ideas", () => {
   it("Momo is parked: no plane, page or list entry until it has content", () => {
     expect(IDEAS.map((i) => i.slug)).toEqual(["econsul", "ephoto", "greencard", "ideasky"]);

@@ -49,8 +49,9 @@ export function stopPanelHtml(st: Stop): string {
   const links = st.links
     ? `<div class="s-links">${st.links.map(([t, label]) => `<button class="panel-link" type="button" data-target="${esc(t)}">${esc(label)}</button>`).join("")}</div>`
     : "";
+  const img = st.photo ? `<img src="${esc(st.photo.src)}"${size(st.photo.w, st.photo.h)} alt="${esc(st.photo.alt)}" loading="lazy">` : "";
   const photo = st.photo
-    ? `<figure><img src="${esc(st.photo.src)}"${size(st.photo.w, st.photo.h)} alt="${esc(st.photo.alt)}" loading="lazy"><figcaption>${esc(st.photo.caption)}</figcaption></figure>`
+    ? `<figure>${st.photo.link ? `<button class="panel-link panel-photo" type="button" data-target="${esc(st.photo.link)}">${img}</button>` : img}<figcaption>${esc(st.photo.caption)}</figcaption></figure>`
     : "";
   const text = st.text ? `<p>${esc(st.text)}</p>` : "";
   const bullets = st.bullets ? `<ul>${st.bullets.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` : "";

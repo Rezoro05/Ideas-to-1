@@ -209,6 +209,11 @@ test("About: a stop opens its story, again closes it, and its links lead on", as
   await page.goto("/about/");
   await page.locator('.b-link[data-target="greencard"]').click();
   await expect(page.locator("#sheet-title")).toHaveText("greencard.ge");
+  // the "Now" stop's picture opens IDEA SKY
+  await page.goto("/about/");
+  await page.locator('.node-btn[data-stop="now"]').click();
+  await page.locator("#stop-inner .panel-photo").click();
+  await expect(page.locator("#sheet-title")).toHaveText("IDEA SKY");
 });
 
 test.describe("reduced motion", () => {
