@@ -98,6 +98,19 @@ test("an idea plane opens its page, and Back returns to the sky", async ({ page 
   await expect(page.locator("#sheet")).toBeHidden();
 });
 
+test("an idea closed right after opening never sticks open", async ({ page }) => {
+  await fakeServices(page);
+  await page.goto("/");
+  const plane = page.locator('.plane[data-slug="econsul"]');
+  for (let i = 0; i < 3; i++) {
+    await plane.focus();
+    await page.keyboard.press("Enter");
+    await page.keyboard.press("Escape"); // same frame as the open
+    await expect(page.locator("#sheet")).toBeHidden();
+    await expect(page.locator("#sheet")).not.toHaveClass(/\bopen\b/);
+  }
+});
+
 test("planes always fly right side up (belly down), whichever way they head", async ({ page }) => {
   await fakeServices(page);
   await page.goto("/");
