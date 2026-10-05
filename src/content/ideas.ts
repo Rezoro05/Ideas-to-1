@@ -97,7 +97,7 @@ export const IDEAS: readonly Idea[] = [
     url: "https://rezoro05.github.io/IDEASKY/", urlLabel: "IDEA SKY",
     lede: "A public sky over the New York skyline. Anyone can fold an idea into a paper plane and send it up; others catch it, like it and comment. As its author brings it to life, the idea moves from Idea to In Progress to Live, and it changes form as it grows: a paper plane, then an airplane, then a bird.",
     facts: [
-      ["Role", "🚀 Founder · 💡 Product · Built with AI"],
+      ["Role", "Builder"],
       ["Status", "Live, 2026"],
       ["Origin", "Grew out of the public idea board that first flew on this site"],
       ["Tech", "Astro + TypeScript · Supabase · unit and browser tests"],
