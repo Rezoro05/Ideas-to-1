@@ -21,6 +21,7 @@ test.describe("pages by URL", () => {
     ["/about/", "About · Revaz Kuparadze", "#view-about"],
     ["/craft/", "Craft · Revaz Kuparadze", "#view-craft"],
     ["/econsul/", "eConsul · Revaz Kuparadze", "#sheet"],
+    ["/ideasky/", "IDEA SKY · Revaz Kuparadze", "#sheet"],
   ] as const) {
     test(`${path} opens with its own content and no errors`, async ({ page }) => {
       await fakeServices(page);
@@ -151,7 +152,7 @@ test("no public idea board: no note, no visitor planes, no outside services; boo
   const errors = watchErrors(page);
   await page.goto("/");
   await page.waitForTimeout(1500);
-  await expect(page.locator(".plane")).toHaveCount(3); // Momo is parked
+  await expect(page.locator(".plane")).toHaveCount(4); // Momo is parked; IDEA SKY is 04
   await expect(page.locator("#note-form, #compose, #letter, #idea-btn, #notes-list")).toHaveCount(0);
   await expect(page.getByText("Share Your Ideas")).toHaveCount(0);
   await expect(page.locator("#call-title")).toHaveText("Have an Idea?");
@@ -272,7 +273,7 @@ test("SEO basics: canonical, structured data, sitemap", async ({ page, request }
   expect(ld["@graph"].map((x: { "@type": string }) => x["@type"])).toEqual(["Person", "WebPage", "CreativeWork"]);
   const sitemap = await (await request.get("/sitemap.xml")).text();
   expect(sitemap).not.toContain("momo");
-  for (const p of ["", "about/", "craft/", "econsul/", "ephoto/", "greencard/"]) expect(sitemap).toContain(`<loc>https://revazkuparadze.com/${p}</loc>`);
+  for (const p of ["", "about/", "craft/", "econsul/", "ephoto/", "greencard/", "ideasky/"]) expect(sitemap).toContain(`<loc>https://revazkuparadze.com/${p}</loc>`);
   expect(await (await request.get("/robots.txt")).text()).toContain("Sitemap: https://revazkuparadze.com/sitemap.xml");
   for (const icon of ["/favicon.ico", "/favicon-32.png", "/apple-touch-icon.png"]) expect((await request.get(icon)).status()).toBe(200);
   await expect(page.locator('link[rel="icon"]').first()).toHaveAttribute("href", "favicon.ico");

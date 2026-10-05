@@ -67,7 +67,7 @@ export const STOPS: readonly Stop[] = [
     id: "now", year: "Now · New York", name: "AI-built products", desc: "LLMs, agents, automation", isNow: true,
     title: "AI-built products", when: "Now · New York", role: "Building with LLMs, agents, workflow automation and rapid prototyping",
     text: "AI lets one person take an idea further, faster. New ideas land in the sky on the homepage as they launch.",
-    links: [["home", "See the ideas in the sky →"]],
+    links: [["ideasky", "Open IDEA SKY →"], ["home", "See the ideas in the sky →"]],
   },
 ];
 

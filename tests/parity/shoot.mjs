@@ -12,7 +12,7 @@ const server = createServer(async (req, res) => {
   catch { res.writeHead(404, { "content-type": "text/html" }); res.end(await readFile(join(siteDir, "404.html"))); }
 }).listen(0);
 const port = server.address().port;
-const PAGES = ["", "about/", "craft/", "econsul/", "ephoto/", "greencard/"];
+const PAGES = ["", "about/", "craft/", "econsul/", "ephoto/", "greencard/", "ideasky/"];
 const SIZES = { desktop: { width: 1440, height: 900 }, phone: { width: 390, height: 844 } };
 await mkdir(outDir, { recursive: true });
 const browser = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium" });

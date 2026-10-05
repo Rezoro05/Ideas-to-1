@@ -92,6 +92,27 @@ export const IDEAS: readonly Idea[] = [
       { src: "ideas/greencard-logo.svg", w: 277, h: 39, alt: "greencard.ge logo", caption: "The greencard.ge logo", logo: true },
     ],
   },
+  {
+    slug: "ideasky", title: "IDEA SKY", year: "2026", line: "A public sky of ideas: share one, and watch it grow from paper plane to bird.",
+    url: "https://rezoro05.github.io/IDEASKY/", urlLabel: "IDEA SKY",
+    lede: "A public sky over the New York skyline. Anyone can fold an idea into a paper plane and send it up; others catch it, like it and comment. As its author brings it to life, the idea moves from Idea to In Progress to Live, and it changes form as it grows: a paper plane, then an airplane, then a bird.",
+    facts: [
+      ["Role", "🚀 Founder · 💡 Product · Built with AI"],
+      ["Status", "Live, 2026"],
+      ["Origin", "Grew out of the public idea board that first flew on this site"],
+      ["Tech", "Astro + TypeScript · Supabase · unit and browser tests"],
+      ["How it works", [
+        "Fold an idea into a paper plane and send it into the sky",
+        "Anyone can catch it, read it, like it, comment, or share a link to it",
+        "The author moves it from Idea to In Progress to Live and posts dated updates",
+        "Each stage flies as its own form: paper plane, airplane, bird",
+      ]],
+    ],
+    media: [
+      { src: "ideas/ideasky-sky.jpg", w: 1400, h: 875, alt: "IDEA SKY home page: paper planes, airplanes and a bird labelled Idea1 to Idea5 flying over an illustrated New York skyline, with a Share Your Idea button", caption: "IDEA SKY · ideas in flight over New York", wide: true },
+      { src: "ideas/ideasky-idea.jpg", w: 960, h: 540, alt: "An opened idea card: Idea4, a stage track at In Progress between Idea and Live, the idea text, its author and date, and like, comment and share buttons", caption: "An idea in progress, with likes, comments and sharing" },
+    ],
+  },
 ];
 
 /** Ideas kept for later but not shown anywhere (no plane, page, list or sitemap entry). Move one into IDEAS to publish it. */
