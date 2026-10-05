@@ -96,11 +96,3 @@ export function step(world: World, input: StepInput, config: FlightConfig): Worl
   });
   return { ...world, planes, time: world.time + dt };
 }
-
-export function addPlane(world: World, plane: Plane): World {
-  return { ...world, planes: world.planes.filter((p) => p.slug !== plane.slug).concat(plane) };
-}
-
-export function removePlane(world: World, slug: string): World {
-  return { ...world, planes: world.planes.filter((p) => p.slug !== slug) };
-}

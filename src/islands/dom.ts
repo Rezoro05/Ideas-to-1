@@ -1,6 +1,4 @@
 /** Small DOM helpers shared by the islands. */
-import { v, type Vec } from "../lib/vec";
-
 export const byId = <T extends HTMLElement = HTMLElement>(id: string): T => {
   const el = document.getElementById(id);
   if (!el) throw new Error(`missing #${id}`);
@@ -32,7 +30,6 @@ export function closeAfterTransition(el: OverlayEl, ms: number, later: Later = s
   later(() => { if (isCurrent(el, g)) el.hidden = true; }, ms);
 }
 
-export const pointOf = (r: DOMRect, dx: number, dy: number): Vec => v(r.left + dx, r.top + dy);
 export const prefersReducedMotion = (): boolean => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 export function randomBytes(n: number): Uint8Array {

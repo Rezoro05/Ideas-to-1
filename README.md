@@ -4,13 +4,12 @@ The site, rebuilt from the prototype as small tested parts (Astro, TypeScript). 
 
 ```
 src/content/      what the site says: ideas, path stops, craft, home copy, site settings
-src/lib/          pure logic (flight sim, notes, routing, markup) — no DOM, unit-tested
-src/boundaries/   the outside world: idea board stores (Supabase, claude.ai db, memory), Formspree inbox, delete keys
-src/islands/      thin page wiring: router, sky, board + letter, composer, About path panel
+src/lib/          pure logic (flight sim, plane attitude, routing, markup) — no DOM, unit-tested
+src/islands/      thin page wiring: router, sky, About path panel
 src/components/   page markup; src/layouts/Site.astro puts a page together
 public/           photos, logos, fonts, CNAME
 tests/unit        Vitest: pure modules, adapters against fake fetch, flight behavior over time
-tests/e2e         Playwright against the built site, with Supabase/Formspree faked
+tests/e2e         Playwright against the built site; all outside requests are blocked
 tests/parity      screenshots of the old site; the rebuild must match them
 ```
 

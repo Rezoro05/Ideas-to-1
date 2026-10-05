@@ -1,26 +1,17 @@
 /** The hero sky: renders the pure flight simulation, and turns pointer and keyboard input into held/paused planes. */
-import { createWorld, step, addPlane, removePlane, type Bounds, type Held, type World } from "../lib/sim";
+import { createWorld, step, type Bounds, type Held, type World } from "../lib/sim";
 import { classifyGesture, movedFarEnough, type PointerMark } from "../lib/gesture";
 import type { FlightConfig } from "../lib/motion";
-import { isNoteSlug } from "../lib/notes";
 import { PLANE_SVG } from "../lib/plane-svg";
 import { rollDeg, shouldMirror, stepRoll } from "../lib/attitude";
 import { headingDeg, len, v, type Vec } from "../lib/vec";
 
-export type PlaneSpec = { tag: string; label: string; href: string; from?: Vec; velocity?: Vec; fresh?: boolean; isNote?: boolean };
-export type Sky = {
-  has(slug: string): boolean;
-  noteSlugs(): string[];
-  bounds(): Bounds;
-  fieldRect(): DOMRect;
-  add(slug: string, spec: PlaneSpec): void;
-  retag(slug: string, tag: string, label: string): void;
-  remove(slug: string): void;
-};
+export type PlaneSpec = { tag: string; label: string; href: string };
+/** The sky runs on its own; nothing outside needs to steer it. */
+export type Sky = { bounds(): Bounds };
 
 /** Planes keep their last heading when they slow below this speed, so they don't spin in place. */
 const MIN_SPEED_FOR_HEADING = 6;
-const FRESH_GLOW_MS = 7000;
 /** Depth for the 3D roll: small enough that the near wing visibly swings toward the viewer. */
 const ROLL_PERSPECTIVE_PX = 160;
 
@@ -41,7 +32,7 @@ export function startSky(opts: {
 
   function makePlane(slug: string, spec: PlaneSpec): HTMLAnchorElement {
     const a = document.createElement("a");
-    a.className = "plane" + (spec.isNote ? " note-p" : "") + (spec.fresh ? " fresh" : "");
+    a.className = "plane";
     a.href = spec.href;
     a.dataset.slug = slug;
     a.style.setProperty("--s", config.planeSize + "px");
@@ -118,33 +109,5 @@ export function startSky(opts: {
   }
   requestAnimationFrame(frame);
 
-  return {
-    has: (slug) => els.has(slug),
-    noteSlugs: () => [...els.keys()].filter(isNoteSlug),
-    bounds,
-    fieldRect: () => field.getBoundingClientRect(),
-    add(slug, spec) {
-      const a = makePlane(slug, spec);
-      const velocity = spec.velocity ?? v(0, 0);
-      angles.set(slug, headingDeg(velocity));
-      world = addPlane(world, { slug, position: spec.from ?? v(0, 0), velocity });
-      if (spec.fresh) setTimeout(() => a.classList.remove("fresh"), FRESH_GLOW_MS);
-    },
-    retag(slug, tag, label) {
-      const a = els.get(slug);
-      if (!a) return;
-      const t = a.querySelector(".tag")!;
-      if (t.textContent !== tag) t.textContent = tag;
-      a.setAttribute("aria-label", label);
-    },
-    remove(slug) {
-      world = removePlane(world, slug);
-      pausedSlugs.delete(slug);
-      els.get(slug)?.remove();
-      els.delete(slug);
-      angles.delete(slug);
-      mirrored.delete(slug);
-      rolls.delete(slug);
-    },
-  };
+  return { bounds };
 }

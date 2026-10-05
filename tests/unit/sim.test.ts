@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { createWorld, step, modeOf, boundsSteer, separationSteer, containWithin, addPlane, removePlane, EDGE_INSET, MAX_DT, type World, type StepInput } from "../../src/lib/sim";
+import { createWorld, step, modeOf, boundsSteer, separationSteer, containWithin, EDGE_INSET, MAX_DT, type World, type StepInput } from "../../src/lib/sim";
 import { FLIGHT_CONFIGS } from "../../src/lib/motion";
 import { v, len } from "../../src/lib/vec";
 
@@ -75,18 +75,9 @@ describe("step", () => {
     expect(w.time).toBeCloseTo(MAX_DT, 9);
   });
   it("never exceeds max speed", () => {
-    const w0 = addPlane(createWorld([], 1, bounds, config), { slug: "x", position: v(600, 300), velocity: v(99999, 0) });
+    const blank = createWorld([], 1, bounds, config);
+    const w0 = { ...blank, planes: [{ slug: "x", position: v(600, 300), velocity: v(99999, 0) }] };
     expect(len(step(w0, input(), config).planes[0]!.velocity)).toBeLessThanOrEqual(config.maxSpeed + 1e-6);
-  });
-});
-
-describe("add / remove planes", () => {
-  it("adding an existing slug replaces it; removing drops it", () => {
-    let w = createWorld(["a"], 1, bounds, config);
-    w = addPlane(w, { slug: "a", position: v(1, 2), velocity: v(0, 0) });
-    expect(w.planes).toHaveLength(1);
-    expect(w.planes[0]!.position).toEqual(v(1, 2));
-    expect(removePlane(w, "a").planes).toHaveLength(0);
   });
 });
 

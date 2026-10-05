@@ -1,24 +1,12 @@
-import { test, expect, type Page, type Route } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 
-/** Fake the outside world: no real Supabase, Formspree or YouTube calls from tests. */
-type Board = { rows: { id: string; name: string; message: string; created_at: string }[]; down?: boolean; posts: unknown[]; deletes: unknown[]; mails: number };
-async function fakeServices(page: Page, board: Board = { rows: [], posts: [], deletes: [], mails: 0 }) {
-  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => r.abort());
-  await page.route("https://ssqcfsbkmrhjfylxghfj.supabase.co/**", async (r: Route) => {
-    if (board.down) return r.fulfill({ status: 500, body: "down" });
-    const url = r.request().url(), method = r.request().method();
-    if (method === "GET") return r.fulfill({ json: board.rows });
-    if (url.endsWith("/rest/v1/ideas")) {
-      const body = r.request().postDataJSON();
-      board.posts.push(body);
-      board.rows.unshift({ id: body.id, name: body.name, message: body.message, created_at: new Date().toISOString() });
-      return r.fulfill({ status: 201, body: "" });
-    }
-    if (url.endsWith("/rpc/delete_idea")) { board.deletes.push(r.request().postDataJSON()); return r.fulfill({ json: true }); }
-    return r.fulfill({ status: 404 });
-  });
-  await page.route("https://formspree.io/**", (r) => { board.mails++; return r.fulfill({ json: { ok: true } }); });
-  return board;
+/** No real outside calls from tests: every request off the local server is blocked and recorded. */
+async function fakeServices(page: Page) {
+  const outside: string[] = [];
+  await page.route(/^https?:\/\/(?!127\.0\.0\.1)/, (r) => { outside.push(r.request().url()); return r.abort(); });
+  return outside;
 }
 function watchErrors(page: Page) {
   const errors: string[] = [];
@@ -155,77 +143,26 @@ test("planes can be dragged and thrown", async ({ page }) => {
   expect(after.x).toBeLessThan(box.x - 150);
 });
 
-test("post an idea: it flies to the sky, opens as a letter, and its author can remove it", async ({ page }) => {
-  const board = await fakeServices(page);
+test("no public idea board: no note, no visitor planes, no outside services; booking is the way in", async ({ page }) => {
+  const outside = await fakeServices(page);
+  const errors = watchErrors(page);
   await page.goto("/");
-  await page.locator("#note-name").fill("Nino");
-  await page.locator("#note-email").fill("nino@");
-  await page.locator("#note-msg").fill("A bike-share for Tbilisi hills");
-  await page.locator(".note-send").click();
-  await expect(page.locator("#note-done")).toBeVisible();
-  const note = page.locator(".plane.note-p");
-  await expect(note).toHaveCount(1, { timeout: 8000 });
-  await expect(note).toHaveAttribute("aria-label", "Idea1: open the note");
-  expect(board.posts).toHaveLength(1);
-  expect(board.posts[0]).toMatchObject({ name: "Nino", message: "A bike-share for Tbilisi hills" });
-  expect(JSON.stringify(board.posts[0])).not.toContain("nino@"); // email never goes to the public board
-  expect(board.mails).toBe(1);
-  await note.focus();
-  await page.keyboard.press("Enter");
-  await expect(page.locator("#letter")).toBeVisible();
-  await expect(page.locator("#letter-body")).toHaveText("A bike-share for Tbilisi hills");
-  await expect(page.locator("#letter-date")).toContainText("From Nino");
-  await page.locator("#letter-remove").click();
-  await expect(page.locator("#letter")).toBeHidden();
-  await expect(note).toHaveCount(0);
-  expect(board.deletes).toHaveLength(1);
+  await page.waitForTimeout(1500);
+  await expect(page.locator(".plane")).toHaveCount(4);
+  await expect(page.locator("#note-form, #compose, #letter, #idea-btn, #notes-list")).toHaveCount(0);
+  await expect(page.getByText("Share Your Ideas")).toHaveCount(0);
+  await expect(page.locator("#call-title")).toHaveText("Have an Idea?");
+  const book = page.locator("#closing-book");
+  await expect(book).toHaveAttribute("href", /calendar\.app\.google/);
+  await expect(book).toHaveAttribute("target", "_blank");
+  expect(outside.filter((u) => /supabase|formspree/.test(u))).toEqual([]);
+  expect(errors).toEqual([]);
 });
 
-test("other people's ideas can be read but not removed", async ({ page }) => {
-  await fakeServices(page, { rows: [{ id: "zzzzzz1", name: "Gio", message: "Night markets", created_at: "2026-09-30T10:00:00Z" }], posts: [], deletes: [], mails: 0 });
-  await page.goto("/");
-  const note = page.locator(".plane.note-p");
-  await expect(note).toHaveCount(1);
-  await note.focus();
-  await page.keyboard.press("Enter");
-  await expect(page.locator("#letter-body")).toHaveText("Night markets");
-  await expect(page.locator("#letter-remove")).toBeHidden();
-  await page.keyboard.press("Escape");
-  await expect(page.locator("#letter")).toBeHidden();
-});
-
-test("if the board is down, the idea still flies and the visitor is told", async ({ page }) => {
-  await fakeServices(page, { rows: [], down: true, posts: [], deletes: [], mails: 0 });
-  await page.goto("/");
-  await page.locator("#note-msg").fill("Still here");
-  await page.locator(".note-send").click();
-  await expect(page.locator("#note-done-text")).toContainText("couldn’t save it just now");
-  await expect(page.locator(".plane.note-p")).toHaveCount(1, { timeout: 8000 });
-});
-
-test("the hero button opens the note; it needs an idea; Escape closes it", async ({ page }) => {
-  await fakeServices(page);
-  await page.goto("/");
-  await page.locator("#idea-btn").click();
-  await expect(page.locator("#compose")).toBeVisible();
-  await expect(page.locator("#note-msg")).toBeFocused();
-  await page.locator("#compose .note-send").click();
-  await expect(page.locator("#note-error")).toHaveText("Write your idea first.");
-  await page.keyboard.press("Escape");
-  await expect(page.locator("#compose")).toBeHidden();
-  await expect(page.locator("#idea-btn")).toBeFocused();
-  await expect(page.locator("#note-wrap #note-form")).toHaveCount(1); // the form went back home
-});
-
-test("bots that fill the hidden field are ignored", async ({ page }) => {
-  const board = await fakeServices(page);
-  await page.goto("/");
-  await page.locator("#note-msg").fill("spam");
-  await page.locator('input[name="_gotcha"]').evaluate((el: HTMLInputElement) => { el.value = "bot"; });
-  await page.locator(".note-send").click();
-  await page.waitForTimeout(500);
-  expect(board.posts).toHaveLength(0);
-  expect(board.mails).toBe(0);
+test("the built site carries no idea-board services or code", () => {
+  const files = (dir: string): string[] => readdirSync(dir, { withFileTypes: true }).flatMap((d) => d.isDirectory() ? files(join(dir, d.name)) : [join(dir, d.name)]);
+  const text = files("dist").filter((f) => /\.(html|js|css|xml|txt)$/.test(f)).map((f) => readFileSync(f, "utf8")).join("\n");
+  for (const gone of ["supabase", "formspree", "Idea Note", "Share Your Ideas", "note-form"]) expect(text, gone).not.toContain(gone);
 });
 
 test("About: a stop opens its story, again closes it, and its links lead on", async ({ page }) => {
@@ -247,16 +184,15 @@ test("About: a stop opens its story, again closes it, and its links lead on", as
 
 test.describe("reduced motion", () => {
   test.use({ reducedMotion: "reduce" });
-  test("shows the plain list instead of the sky, and it still opens ideas and notes", async ({ page }) => {
-    await fakeServices(page, { rows: [{ id: "zzzzzz1", name: "Gio", message: "Night markets", created_at: "2026-09-30T10:00:00Z" }], posts: [], deletes: [], mails: 0 });
+  test("shows the plain list instead of the sky, and it still opens ideas", async ({ page }) => {
+    await fakeServices(page);
     await page.goto("/");
     await expect(page.locator("#fallback")).toBeVisible();
     await expect(page.locator(".plane")).toHaveCount(0);
     await page.locator('#ideas a[data-slug="econsul"]').click();
     await expect(page).toHaveURL(/\/econsul\/$/);
     await page.locator("#back").click();
-    await page.locator("#notes-list a").first().click();
-    await expect(page.locator("#letter-body")).toHaveText("Night markets");
+    await expect(page.locator("#sheet")).toBeHidden();
   });
 });
 

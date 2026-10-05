@@ -13,7 +13,6 @@ import CraftView from "../components/CraftView.astro";
 import AboutView from "../components/AboutView.astro";
 import Footer from "../components/Footer.astro";
 import Sheet from "../components/Sheet.astro";
-import Overlays from "../components/Overlays.astro";
 import { PREVIEW } from "../build-mode";
 import { SITE, type PageMeta } from "../content/site";
 import type { Idea } from "../content/ideas";
@@ -72,7 +71,6 @@ const ld = { "@context": "https://schema.org", "@graph": [person, { "@type": "We
   <Footer />
 </div>
 <Sheet idea={idea} />
-<Overlays />
 <script>
   import { startSite } from "../islands/app";
   startSite();
