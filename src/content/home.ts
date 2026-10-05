@@ -37,7 +37,7 @@ export const HOW_TO: readonly HowToStep[] = [
 
 export const ABOUT_STORY = {
   intro: "I take ideas from 0 to 1. Here is how I got good at it.",
-  started: "I’ve always been tech-savvy. It started with gaming, which soon turned into reinstalling Windows for neighbors and friends. That curiosity led me and my hacker friend Devi to co-found Georgia’s first tech education website. It fueled our passion for technology and won us a silver medal at Infomatrix, an international computer olympiad. That was my first taste of winning.",
+  started: "I’ve always been tech-savvy. It started with gaming, which soon turned into reinstalling Windows for neighbors and friends. That curiosity led me and my hacker friend Devi to co-found Georgia’s first tech education website. It fueled my passion for technology and won us a silver medal at Infomatrix, an international computer olympiad. That was my first taste of winning.",
   fresh: "Recently I won the Green Card Lottery through the platform I helped build, and made the leap from the small country of Georgia to the US. I packed up everything I had built over 30 years to start fresh. Now I’m here, on a new path to my American dream. I built this site to reach the people who will come along on this journey.",
 } as const;
 
