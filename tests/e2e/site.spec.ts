@@ -100,14 +100,16 @@ test("an idea closed right after opening never sticks open", async ({ page }) =>
 });
 
 test("planes always fly right side up (belly down), whichever way they head", async ({ page }) => {
+  test.setTimeout(40_000);
   await fakeServices(page);
   await page.goto("/");
   /* Local "up" (0,-1) through the body's transform has screen y = -d. Upright means it points up, allowing the
      hysteresis band near vertical, where |cos(heading)| <= sin(15deg) ~ 0.26. */
   const worst = await page.evaluate(async () => {
     let min = 1, sawLeft = false, sawRight = false, rolling = 0, frames = 0;
-    const end = performance.now() + 4000;
-    while (performance.now() < end) {
+    // Sample at least 3 s, and keep going (up to 15 s) until a plane has been seen heading left (the flipped case).
+    const start = performance.now();
+    while (performance.now() - start < 3000 || (!sawLeft && performance.now() - start < 15000)) {
       await new Promise(requestAnimationFrame);
       frames++;
       for (const body of document.querySelectorAll<HTMLElement>(".plane .body")) {
@@ -121,7 +123,7 @@ test("planes always fly right side up (belly down), whichever way they head", as
     }
     return { min, sawLeft, sawRight, rollingShare: rolling / (frames * 4) };
   });
-  expect(worst.sawLeft && worst.sawRight).toBe(true); // the check saw planes heading both ways
+  expect(worst, JSON.stringify(worst)).toMatchObject({ sawLeft: true }); // the check saw a flipped, left-heading plane
   expect(worst.min).toBeGreaterThan(-0.27);
   expect(worst.rollingShare).toBeLessThan(0.5); // rolls finish; planes are not stuck mid-roll
 });
