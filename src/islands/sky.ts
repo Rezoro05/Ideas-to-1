@@ -4,7 +4,7 @@ import { classifyGesture, movedFarEnough, type PointerMark } from "../lib/gestur
 import type { FlightConfig } from "../lib/motion";
 import { isNoteSlug } from "../lib/notes";
 import { PLANE_SVG } from "../lib/plane-svg";
-import { shouldMirror } from "../lib/attitude";
+import { rollDeg, shouldMirror, stepRoll } from "../lib/attitude";
 import { headingDeg, len, v, type Vec } from "../lib/vec";
 
 export type PlaneSpec = { tag: string; label: string; href: string; from?: Vec; velocity?: Vec; fresh?: boolean; isNote?: boolean };
@@ -21,6 +21,8 @@ export type Sky = {
 /** Planes keep their last heading when they slow below this speed, so they don't spin in place. */
 const MIN_SPEED_FOR_HEADING = 6;
 const FRESH_GLOW_MS = 7000;
+/** Depth for the 3D roll: small enough that the near wing visibly swings toward the viewer. */
+const ROLL_PERSPECTIVE_PX = 160;
 
 export function startSky(opts: {
   field: HTMLElement;
@@ -33,7 +35,7 @@ export function startSky(opts: {
   const { field, config } = opts;
   const bounds = (): Bounds => ({ width: field.clientWidth, height: field.clientHeight });
   let world: World = createWorld(opts.ideas.map((i) => i.slug), opts.visitSeed, bounds(), config);
-  const els = new Map<string, HTMLAnchorElement>(), angles = new Map<string, number>(), mirrored = new Map<string, boolean>();
+  const els = new Map<string, HTMLAnchorElement>(), angles = new Map<string, number>(), mirrored = new Map<string, boolean>(), rolls = new Map<string, number>();
   const pausedSlugs = new Set<string>(); // keyboard focus only; hover just recolors
   let held: Held | null = null, press: (PointerMark & { slug: string }) | null = null, suppressClick = false;
 
@@ -103,10 +105,13 @@ export function startSky(opts: {
         if (len(p.velocity) > MIN_SPEED_FOR_HEADING) angles.set(p.slug, headingDeg(p.velocity));
         const angle = angles.get(p.slug) ?? 0;
         const flip = shouldMirror(mirrored.get(p.slug) ?? false, angle);
+        const roll = stepRoll(rolls.get(p.slug) ?? (flip ? 1 : 0), flip, dt);
         mirrored.set(p.slug, flip);
+        rolls.set(p.slug, roll);
         el.dataset.mirrored = String(flip);
+        el.dataset.rolling = String(roll !== (flip ? 1 : 0));
         el.style.transform = `translate3d(${p.position.x}px, ${p.position.y}px, 0)`;
-        (el.firstElementChild as HTMLElement).style.transform = `rotate(${angle}deg) scaleY(${flip ? -1 : 1})`;
+        (el.firstElementChild as HTMLElement).style.transform = `perspective(${ROLL_PERSPECTIVE_PX}px) rotate(${angle}deg) rotateX(${rollDeg(roll)}deg)`;
       }
     }
     requestAnimationFrame(frame);
@@ -139,6 +144,7 @@ export function startSky(opts: {
       els.delete(slug);
       angles.delete(slug);
       mirrored.delete(slug);
+      rolls.delete(slug);
     },
   };
 }

@@ -104,21 +104,25 @@ test("planes always fly right side up (belly down), whichever way they head", as
   /* Local "up" (0,-1) through the body's transform has screen y = -d. Upright means it points up, allowing the
      hysteresis band near vertical, where |cos(heading)| <= sin(15deg) ~ 0.26. */
   const worst = await page.evaluate(async () => {
-    let min = 1, sawLeft = false, sawRight = false;
+    let min = 1, sawLeft = false, sawRight = false, rolling = 0, frames = 0;
     const end = performance.now() + 4000;
     while (performance.now() < end) {
       await new Promise(requestAnimationFrame);
+      frames++;
       for (const body of document.querySelectorAll<HTMLElement>(".plane .body")) {
+        const plane = body.parentElement!;
+        if (plane.dataset.rolling === "true") { rolling++; continue; } // mid-roll it is legitimately on its side
         const m = new DOMMatrix(getComputedStyle(body).transform);
         min = Math.min(min, m.d);
         if (m.a < -0.5) sawLeft = true;
         if (m.a > 0.5) sawRight = true;
       }
     }
-    return { min, sawLeft, sawRight };
+    return { min, sawLeft, sawRight, rollingShare: rolling / (frames * 4) };
   });
   expect(worst.sawLeft && worst.sawRight).toBe(true); // the check saw planes heading both ways
   expect(worst.min).toBeGreaterThan(-0.27);
+  expect(worst.rollingShare).toBeLessThan(0.5); // rolls finish; planes are not stuck mid-roll
 });
 
 test("planes can be dragged and thrown", async ({ page }) => {

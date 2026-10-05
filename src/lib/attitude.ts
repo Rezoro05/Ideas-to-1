@@ -15,3 +15,19 @@ export function shouldMirror(wasMirrored: boolean, headingDeg: number, hysteresi
   if (wasMirrored) return off > 90 - hysteresisDeg;
   return off > 90 + hysteresisDeg;
 }
+
+/** How long the roll from upright to mirrored (or back) takes. */
+export const ROLL_SECONDS = 0.9;
+
+/** Moves roll progress (0 = upright, 1 = mirrored) toward its target at a steady rate; never overshoots. */
+export function stepRoll(progress: number, mirrored: boolean, dt: number, seconds = ROLL_SECONDS): number {
+  const target = mirrored ? 1 : 0;
+  const stepBy = Math.max(0, dt) / seconds;
+  return progress < target ? Math.min(target, progress + stepBy) : Math.max(target, progress - stepBy);
+}
+
+/** Roll angle around the plane's length for a progress, eased in and out so the roll starts and lands softly. */
+export function rollDeg(progress: number): number {
+  const p = Math.min(1, Math.max(0, progress));
+  return 180 * (p < 0.5 ? 2 * p * p : 1 - 2 * (1 - p) * (1 - p));
+}
