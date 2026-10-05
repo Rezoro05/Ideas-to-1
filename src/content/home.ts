@@ -2,7 +2,7 @@
 
 export const HERO = {
   /** <b> marks the accent words, as on the page */
-  lede: "The value of the idea itself without execution is <b>0</b>. Whether it’s a digital product, creative strategy, or business obstacle, I turn ideas to <b>1</b>. I believe an idea that is not exposed is lost. <b>Are you ready?</b>",
+  lede: "Whether it’s a digital product, creative strategy, or business obstacle, I turn ideas to <b>1</b>. I believe an idea that is not exposed is lost. <b>Are you ready?</b>",
 } as const;
 
 export type Logo = {
