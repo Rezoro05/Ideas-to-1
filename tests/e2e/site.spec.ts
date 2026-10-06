@@ -130,6 +130,44 @@ test("planes always fly right side up (belly down), whichever way they head", as
   expect(worst.rollingShare).toBeLessThan(0.5); // rolls finish; planes are not stuck mid-roll
 });
 
+test("a plane thrown off the edge stays in the sky and turns smoothly: no snaps, no teleport", async ({ page }) => {
+  await fakeServices(page);
+  await page.goto("/");
+  await page.waitForTimeout(400);
+  const plane = page.locator('.plane[data-slug="ephoto"]');
+  await plane.focus();
+  const box = (await plane.boundingBox())!;
+  const x0 = box.x + box.width / 2, y0 = box.y + box.height / 2;
+  await page.mouse.move(x0, y0);
+  await page.mouse.down();
+  for (let i = 1; i <= 10; i++) await page.mouse.move(x0 + i * 120, y0 - i * 10, { steps: 1 }); // well past the right edge
+  const watch = page.evaluate(async () => {
+    const el = document.querySelector<HTMLElement>('.plane[data-slug="ephoto"]')!;
+    const field = document.getElementById("field")!;
+    let prev: { x: number; y: number; a: number } | null = null, maxTurn = 0, maxJump = 0, maxOut = 0;
+    const t0 = performance.now();
+    while (performance.now() - t0 < 2500) {
+      await new Promise(requestAnimationFrame);
+      const m = new DOMMatrix(el.style.transform);
+      const a = +(el.firstElementChild as HTMLElement).style.transform.match(/rotate\(([-\d.e]+)deg\)/)![1]!;
+      maxOut = Math.max(maxOut, m.m41 - field.clientWidth, -m.m41, m.m42 - field.clientHeight, -m.m42);
+      if (prev) {
+        let d = Math.abs(a - prev.a); d = Math.min(d, 360 - d);
+        maxTurn = Math.max(maxTurn, d);
+        maxJump = Math.max(maxJump, Math.hypot(m.m41 - prev.x, m.m42 - prev.y));
+      }
+      prev = { x: m.m41, y: m.m42, a };
+    }
+    return { maxTurn, maxJump, maxOut };
+  });
+  await page.mouse.up();
+  await page.locator("body").click({ position: { x: 3, y: 3 } });
+  const r = await watch;
+  expect(r.maxOut, JSON.stringify(r)).toBeLessThanOrEqual(0);
+  expect(r.maxJump, JSON.stringify(r)).toBeLessThan(40);
+  expect(r.maxTurn, JSON.stringify(r)).toBeLessThan(25);
+});
+
 test("planes can be dragged and thrown", async ({ page }) => {
   await fakeServices(page);
   await page.goto("/");

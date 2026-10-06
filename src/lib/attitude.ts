@@ -31,3 +31,14 @@ export function rollDeg(progress: number): number {
   const p = Math.min(1, Math.max(0, progress));
   return 180 * (p < 0.5 ? 2 * p * p : 1 - 2 * (1 - p) * (1 - p));
 }
+
+/** How quickly the drawn nose follows the flight direction (seconds to cover ~63% of a turn). */
+export const TURN_TIME_CONSTANT = 0.15;
+
+/** Turns the drawn heading toward the flight heading the short way round, easing out, never overshooting.
+ *  A bounce off the edge reverses the velocity in one frame; this spreads the turn over a few frames so the plane doesn't snap. */
+export function turnToward(currentDeg: number, targetDeg: number, dt: number, timeConstant = TURN_TIME_CONSTANT): number {
+  const diff = normalizeDeg(targetDeg - currentDeg);
+  const share = 1 - Math.exp(-Math.max(0, dt) / timeConstant);
+  return normalizeDeg(currentDeg + diff * share);
+}

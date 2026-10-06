@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { normalizeDeg, shouldMirror, stepRoll, rollDeg, ROLL_SECONDS, MIRROR_HYSTERESIS_DEG as H } from "../../src/lib/attitude";
+import { normalizeDeg, shouldMirror, stepRoll, rollDeg, turnToward, ROLL_SECONDS, MIRROR_HYSTERESIS_DEG as H } from "../../src/lib/attitude";
 
 describe("normalizeDeg", () => {
   it("maps any angle into (-180, 180]", () => {
@@ -59,5 +59,23 @@ describe("roll", () => {
     expect(rollDeg(1)).toBe(180);
     expect(rollDeg(0.25) + rollDeg(0.75)).toBeCloseTo(180);
     expect(rollDeg(0.1)).toBeLessThan(18); // slow start
+  });
+});
+
+describe("turnToward", () => {
+  it("a bounce (128° reversal) is spread over frames: no single frame turns more than 15°", () => {
+    let a = -18, maxStep = 0;
+    for (let i = 0; i < 60; i++) { const n = turnToward(a, -146, 1 / 60); maxStep = Math.max(maxStep, Math.abs(normalizeDeg(n - a))); a = n; }
+    expect(maxStep).toBeLessThan(15);
+    expect(Math.abs(normalizeDeg(a + 146))).toBeLessThan(1); // arrives within a second
+  });
+  it("turns the short way across ±180", () => {
+    const n = turnToward(170, -170, 1 / 60);
+    expect(n > 170 || n <= -179).toBe(true);
+  });
+  it("never overshoots, and holds still with no time", () => {
+    expect(turnToward(10, 20, 100)).toBeCloseTo(20);
+    expect(turnToward(10, 20, 0)).toBe(10);
+    expect(turnToward(10, 20, -1)).toBe(10);
   });
 });

@@ -74,6 +74,13 @@ describe("step", () => {
     expect(w1.planes[0]).toEqual(w0.planes[0]);
     expect(w1.planes[1]).not.toEqual(w0.planes[1]);
   });
+  it("a held plane stays inside the sky when the pointer leaves it, so release never teleports it", () => {
+    const w0 = createWorld(["a"], 1, bounds, config);
+    const w1 = step(w0, input({ held: { slug: "a", pointer: v(bounds.width + 365, -50) } }), config);
+    expect(w1.planes[0]!.position).toEqual(v(bounds.width - EDGE_INSET, EDGE_INSET));
+    const w2 = step(w1, input(), config); // released: carries on from the edge, no jump
+    expect(len(v(w2.planes[0]!.position.x - w1.planes[0]!.position.x, w2.planes[0]!.position.y - w1.planes[0]!.position.y))).toBeLessThan(30);
+  });
   it("a held plane follows the pointer", () => {
     const w0 = createWorld(["a"], 3, bounds, config);
     const w1 = step(w0, input({ held: { slug: "a", pointer: v(321, 123) } }), config);

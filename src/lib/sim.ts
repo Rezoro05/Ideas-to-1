@@ -83,8 +83,11 @@ export function step(world: World, input: StepInput, config: FlightConfig): Worl
   const planes = world.planes.map((plane) => {
     const mode = modeOf(plane.slug, input);
     if (mode === "held" && input.held) {
-      const moved = scale(sub(input.held.pointer, plane.position), 1 / Math.max(dt, 1e-3));
-      return { ...plane, position: input.held.pointer, velocity: add(scale(plane.velocity, 0.6), scale(moved, 0.4)) };
+      // The pointer can leave the sky while dragging; the plane stays inside and slides along the edge,
+      // so it never vanishes off-screen and then jumps back on release.
+      const target = containWithin({ ...plane, position: input.held.pointer }, input.bounds).position;
+      const moved = scale(sub(target, plane.position), 1 / Math.max(dt, 1e-3));
+      return { ...plane, position: target, velocity: add(scale(plane.velocity, 0.6), scale(moved, 0.4)) };
     }
     if (mode === "paused") return plane;
     const others = world.planes.filter((o) => o.slug !== plane.slug);

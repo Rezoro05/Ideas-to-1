@@ -3,7 +3,7 @@ import { createWorld, step, type Bounds, type Held, type World } from "../lib/si
 import { classifyGesture, movedFarEnough, type PointerMark } from "../lib/gesture";
 import type { FlightConfig } from "../lib/motion";
 import { PLANE_SVG } from "../lib/plane-svg";
-import { rollDeg, shouldMirror, stepRoll } from "../lib/attitude";
+import { rollDeg, shouldMirror, stepRoll, turnToward } from "../lib/attitude";
 import { labelSide, type LabelSide } from "../lib/labels";
 import { headingDeg, len, v, type Vec } from "../lib/vec";
 
@@ -48,7 +48,7 @@ export function startSky(opts: {
     els.set(slug, a);
     return a;
   }
-  for (const { slug, spec } of opts.ideas) { makePlane(slug, spec); angles.set(slug, 0); }
+  for (const { slug, spec } of opts.ideas) makePlane(slug, spec);
 
   const local = (e: PointerEvent): Vec => { const r = field.getBoundingClientRect(); return v(e.clientX - r.left, e.clientY - r.top); };
   field.addEventListener("pointerdown", (e) => {
@@ -96,8 +96,9 @@ export function startSky(opts: {
       for (const p of world.planes) {
         const el = els.get(p.slug);
         if (!el) continue;
-        if (len(p.velocity) > MIN_SPEED_FOR_HEADING) angles.set(p.slug, headingDeg(p.velocity));
-        const angle = angles.get(p.slug) ?? 0;
+        const shown = angles.get(p.slug) ?? headingDeg(p.velocity);
+        const angle = len(p.velocity) > MIN_SPEED_FOR_HEADING ? turnToward(shown, headingDeg(p.velocity), dt) : shown;
+        angles.set(p.slug, angle);
         const flip = shouldMirror(mirrored.get(p.slug) ?? false, angle);
         const roll = stepRoll(rolls.get(p.slug) ?? (flip ? 1 : 0), flip, dt);
         mirrored.set(p.slug, flip);

@@ -82,6 +82,12 @@ body { background: var(--paper); color: var(--ink); font: 400 16px/1.55 var(--fo
   font: 500 11px/1 var(--font-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--graphite);
   pointer-events: none; transition: color .2s; }
 .plane.tag-left .tag { left: auto; right: calc(var(--s) / 2 + 4px); }
+/* When a label moves to the other side of its plane (near the screen edge), it fades in there instead of jumping */
+.plane .tag { animation: tag-in-right .3s ease-out; }
+.plane.tag-left .tag { animation-name: tag-in-left; }
+@keyframes tag-in-right { from { opacity: 0; } }
+@keyframes tag-in-left { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .plane .tag { animation: none; } }
 .plane:hover .tag, .plane:focus-visible .tag, .plane.held .tag { color: var(--accent); }
 .plane:hover .pf, .plane:focus-visible .pf, .plane.held .pf { fill: var(--accent); stroke: var(--paper); }
 .plane:focus-visible .body { outline: 2px solid var(--accent); outline-offset: 6px; border-radius: 50%; }
