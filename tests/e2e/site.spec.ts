@@ -247,6 +247,20 @@ test("Craft ad stills are hosted with the site, so they show even where YouTube 
   expect(outside.filter((u) => /ytimg|youtube/.test(u))).toEqual([]);
 });
 
+for (const colorScheme of ["light", "dark"] as const) {
+  test(`About and Craft show the line grid in ${colorScheme} mode`, async ({ browser }) => {
+    const ctx = await browser.newContext({ colorScheme });
+    const page = await ctx.newPage();
+    await fakeServices(page);
+    for (const [path, id] of [["/about/", "#view-about"], ["/craft/", "#view-craft"]] as const) {
+      await page.goto(path);
+      const bg = await page.locator(id).evaluate((el) => getComputedStyle(el, "::before").backgroundImage);
+      expect(bg, `${path} ${colorScheme}`).toContain("linear-gradient");
+    }
+    await ctx.close();
+  });
+}
+
 test("About: a stop opens its story, again closes it, and its links lead on", async ({ page }) => {
   await fakeServices(page);
   await page.goto("/about/");

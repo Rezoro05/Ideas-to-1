@@ -590,17 +590,13 @@ html, body { overflow-x: clip; }
   .sheet, .sheet-inner, .critter { transition: none; }
 }
 
-/* Dark mode, About and Craft pages: the hero's light line grid behind the black background */
-@media (prefers-color-scheme: dark) {
-:root:not([data-theme="light"]) #view-about , :root:not([data-theme="light"]) #view-craft { position: relative; isolation: isolate; }
-:root:not([data-theme="light"]) #view-about::before, :root:not([data-theme="light"]) #view-craft::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
-:root:not([data-theme="light"]) #view-about .tone-mist , :root:not([data-theme="light"]) #view-craft .tone-mist { position: relative; isolation: isolate; }
-:root:not([data-theme="light"]) #view-about .tone-mist::before , :root:not([data-theme="light"]) #view-craft .tone-mist::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
-}
-:root[data-theme="dark"] #view-about , :root[data-theme="dark"] #view-craft { position: relative; isolation: isolate; }
-:root[data-theme="dark"] #view-about::before, :root[data-theme="dark"] #view-craft::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
-:root[data-theme="dark"] #view-about .tone-mist , :root[data-theme="dark"] #view-craft .tone-mist { position: relative; isolation: isolate; }
-:root[data-theme="dark"] #view-about .tone-mist::before , :root[data-theme="dark"] #view-craft .tone-mist::before { content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none; --dgrid: color-mix(in srgb, var(--ink) 6%, transparent); background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px); background-size: 32px 32px; background-position: -1px -1px; }
+/* About and Craft pages: the hero's line grid behind the page, in light and dark mode alike */
+#view-about, #view-craft, #view-about .tone-mist, #view-craft .tone-mist { position: relative; isolation: isolate; }
+#view-about::before, #view-craft::before, #view-about .tone-mist::before, #view-craft .tone-mist::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -100vmax; right: -100vmax; z-index: -1; pointer-events: none;
+  --dgrid: color-mix(in srgb, var(--ink) 6%, transparent);
+  background-image: linear-gradient(var(--dgrid) 1px, transparent 1px), linear-gradient(90deg, var(--dgrid) 1px, transparent 1px);
+  background-size: 32px 32px; background-position: -1px -1px; }
 
 /* Phones: slightly larger reading sizes */
 @media (max-width: 560px) {
