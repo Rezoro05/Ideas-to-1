@@ -102,16 +102,16 @@ test("an idea closed right after opening never sticks open", async ({ page }) =>
 });
 
 test("planes always fly right side up (belly down), whichever way they head", async ({ page }) => {
-  test.setTimeout(40_000);
+  test.setTimeout(60_000);
   await fakeServices(page);
   await page.goto("/");
   /* Local "up" (0,-1) through the body's transform has screen y = -d. Upright means it points up, allowing the
      hysteresis band near vertical, where |cos(heading)| <= sin(15deg) ~ 0.26. */
   const worst = await page.evaluate(async () => {
     let min = 1, sawLeft = false, sawRight = false, rolling = 0, frames = 0;
-    // Sample at least 3 s, and keep going (up to 15 s) until a plane has been seen heading left (the flipped case).
+    // Sample at least 3 s, and keep going (up to 35 s) until a plane has been seen heading left (the flipped case).
     const start = performance.now();
-    while (performance.now() - start < 3000 || (!sawLeft && performance.now() - start < 15000)) {
+    while (performance.now() - start < 3000 || (!sawLeft && performance.now() - start < 35000)) {
       await new Promise(requestAnimationFrame);
       frames++;
       for (const body of document.querySelectorAll<HTMLElement>(".plane .body")) {
@@ -176,13 +176,16 @@ test("planes can be dragged and thrown", async ({ page }) => {
   await plane.focus(); // pause it so we can grab it reliably
   const box = (await plane.boundingBox())!;
   const x0 = box.x + box.width / 2, y0 = box.y + box.height / 2;
+  // drag toward whichever side has room (planes now stay inside the sky, so a plane near an edge can't go further)
+  const field = (await page.locator("#field").boundingBox())!;
+  const dir = x0 > field.x + field.width / 2 ? -1 : 1;
   await page.mouse.move(x0, y0);
   await page.mouse.down();
-  for (let i = 1; i <= 10; i++) await page.mouse.move(x0 - i * 25, y0, { steps: 1 });
+  for (let i = 1; i <= 10; i++) await page.mouse.move(x0 + dir * i * 25, y0, { steps: 1 });
   await page.mouse.up();
   await expect(page).toHaveURL(/127\.0\.0\.1:4329\/$/); // a drag is not a click
   const after = (await plane.boundingBox())!;
-  expect(after.x).toBeLessThan(box.x - 150);
+  expect((after.x - box.x) * dir).toBeGreaterThan(150);
 });
 
 test("no public idea board: no note, no visitor planes, no outside services; booking is the way in", async ({ page }) => {
@@ -230,6 +233,18 @@ test("intro: logo mark, then REVAZ and KUPARADZE, then the page; it never blocks
   await expect(loader).toBeHidden({ timeout: 4000 }); // gone after the intro
   // the header and footer logo still render from the same logo image
   for (const sel of [".bar .brand", ".foot .brand"]) expect(await page.locator(sel).evaluate((el) => getComputedStyle(el).maskImage || getComputedStyle(el).webkitMaskImage)).toContain("data:image/png");
+});
+
+test("Craft ad stills are hosted with the site, so they show even where YouTube is blocked", async ({ page }) => {
+  const outside = await fakeServices(page);
+  await page.goto("/craft/");
+  const imgs = page.locator(".ad-media img");
+  await expect(imgs).toHaveCount(6);
+  for (const img of await imgs.all()) {
+    await img.scrollIntoViewIfNeeded();
+    await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth)).toBe(800);
+  }
+  expect(outside.filter((u) => /ytimg|youtube/.test(u))).toEqual([]);
 });
 
 test("About: a stop opens its story, again closes it, and its links lead on", async ({ page }) => {

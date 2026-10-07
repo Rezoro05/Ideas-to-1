@@ -18,7 +18,7 @@ const { hidden } = Astro.props as { hidden: boolean };
     <div class="band-head"><h2 id="films-title">Ads</h2><p>{ADS_NOTE}</p></div>
     <div class="ad-grid">
       {ADS.map((ad, i) => (
-        <article class:list={["ad-card", { "ad-lead": i === 0 }]}><a class="ad-media" href={`https://www.youtube.com/watch?v=${ad.youtubeId}`} target="_blank" rel="noopener" aria-label={`Play ${ad.title} on YouTube`}><img src={`https://i.ytimg.com/vi/${ad.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" onerror="this.remove()"><span class="ad-fallback">{ad.title}</span><span class="play" aria-hidden="true"></span></a><div class="ad-meta"><h3>{ad.title}</h3><p class="brief">{ad.brief}</p><span class="role">{ad.role}</span></div></article>
+        <article class:list={["ad-card", { "ad-lead": i === 0 }]}><a class="ad-media" href={`https://www.youtube.com/watch?v=${ad.youtubeId}`} target="_blank" rel="noopener" aria-label={`Play ${ad.title} on YouTube`}><img src={`craft/ads/${ad.youtubeId}.jpg`} width="800" height="450" alt="" loading="lazy"><span class="ad-fallback">{ad.title}</span><span class="play" aria-hidden="true"></span></a><div class="ad-meta"><h3>{ad.title}</h3><p class="brief">{ad.brief}</p><span class="role">{ad.role}</span></div></article>
       ))}
     </div>
   </section>
