@@ -68,7 +68,7 @@ describe("stop photo links", () => {
 
 describe("parked ideas", () => {
   it("Momo is parked: no plane, page or list entry until it has content", () => {
-    expect(IDEAS.map((i) => i.slug)).toEqual(["econsul", "ephoto", "greencard", "ideasky"]);
+    expect(IDEAS.map((i) => i.slug)).toEqual(["econsul", "ephoto", "greencard", "ideasky", "vinyl"]);
     expect(ideaBySlug("momo")).toBeUndefined();
     expect(PARKED_IDEAS.map((i) => i.slug)).toContain("momo");
   });

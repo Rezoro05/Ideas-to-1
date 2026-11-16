@@ -59,7 +59,7 @@ export const STOPS: readonly Stop[] = [
     branches: [{ target: "greencard", name: "greencard.ge", desc: "10K+ users" }, { target: "ephoto", name: "ePhoto.AI", desc: "8K+ users in year one" }],
     title: "eConsul", when: "2022–2026", role: "Co-founder · Head of Product",
     bullets: ["Georgia’s largest visa and immigration tech startup", "$500K+ annual revenue · 22 people · profitable within 3 months · NPS 79", "Spun off greencard.ge (10K+ users) and ePhoto.AI (8K+ users in year one)"],
-    awards: [["Nominee", "Tourism Tech Innovation · National Tourism Awards Georgia", "2026"], ["Winner", "Tourism Tech Innovation of the Year", "2024"], ["Gold", "GITA top startup · $60K grant", "2022"]],
+    awards: [["Winner", "Tourism Tech Innovation · National Tourism Awards Georgia", "2026"], ["Winner", "Tourism Tech Innovation of the Year", "2024"], ["Gold", "GITA top startup · $60K grant", "2022"]],
     photo: { src: "about/award-gita-2022.jpg", alt: "The eConsul team on stage holding the GITA matching grant cheque for 150,000 GEL", caption: "GITA matching grant · 150,000 GEL · 2022", w: 1400, h: 933 },
     links: [["econsul", "Open eConsul →"], ["greencard", "greencard.ge →"], ["ephoto", "ePhoto.AI →"]],
   },
@@ -68,7 +68,7 @@ export const STOPS: readonly Stop[] = [
     title: "AI-built products", when: "2026–now · New York", role: "Building with LLMs, agents, workflow automation and rapid prototyping",
     text: "AI lets one person take an idea further, faster. New ideas land in the sky on the homepage as they launch.",
     photo: { src: "ideas/ideasky-sky.jpg", alt: "IDEA SKY: paper planes, airplanes and a bird flying over an illustrated New York skyline", caption: "IDEA SKY · ideas in flight over New York", w: 1400, h: 875, link: "ideasky" },
-    links: [["ideasky", "Open IDEA SKY →"], ["home", "See the ideas in the sky →"]],
+    links: [["ideasky", "Open IDEA SKY →"], ["vinyl", "Open Vinyl Scanner →"], ["home", "See the ideas in the sky →"]],
   },
 ];
 

@@ -30,7 +30,7 @@ export const IDEAS: readonly Idea[] = [
       ["Scale", "$500K+ annual revenue · 22 people · 10K+ users surveyed"],
       ["Quality", "NPS 79 · 17% fewer application errors · 30% faster Time-to-Yes"],
       ["Recognition", [
-        "Nominee, Tourism Tech Innovation · National Tourism Awards Georgia (2026)",
+        "Winner, Tourism Tech Innovation · National Tourism Awards Georgia (2026)",
         "Winner, Tourism Tech Innovation of the Year (2024)",
         "GITA top startup, $60K grant (2022)",
         "Start-up Challenge winner: TBC Bank’s internal competition among employees (2021)",
@@ -38,7 +38,7 @@ export const IDEAS: readonly Idea[] = [
     ],
     media: [
       { src: "ideas/econsul-team.jpg", w: 1400, h: 934, alt: "The eConsul team, about twenty people, posing together in a sunlit forest", caption: "The eConsul team", wide: true },
-      { src: "ideas/econsul-nta-2026.jpg", w: 900, h: 1125, alt: "National Tourism Awards Georgia 2026 poster naming eConsul a nominee for Tourism Tech Innovation", caption: "Nominee, Tourism Tech Innovation · National Tourism Awards Georgia 2026" },
+      { src: "ideas/econsul-nta-2026.jpg", w: 900, h: 1125, alt: "National Tourism Awards Georgia 2026 poster naming eConsul a nominee for Tourism Tech Innovation", caption: "Winner, Tourism Tech Innovation · National Tourism Awards Georgia 2026" },
     ],
   },
   {
@@ -111,6 +111,26 @@ export const IDEAS: readonly Idea[] = [
     media: [
       { src: "ideas/ideasky-sky.jpg", w: 1400, h: 875, alt: "IDEA SKY home page: paper planes, airplanes and a bird labelled Idea1 to Idea5 flying over an illustrated New York skyline, with a Share Your Idea button", caption: "IDEA SKY · ideas in flight over New York", wide: true },
       { src: "ideas/ideasky-idea.jpg", w: 960, h: 540, alt: "An opened idea card: Idea4, a stage track at In Progress between Idea and Live, the idea text, its author and date, and like, comment and share buttons", caption: "An idea in progress, with likes, comments and sharing" },
+    ],
+  },
+  {
+    slug: "vinyl", title: "Vinyl Scanner", year: "2026", line: "Photograph a record cover, get the album, its tracks by side, and one tap to play it.",
+    url: "https://rezoro05.github.io/Vinyl-Scanner-/", urlLabel: "Vinyl Scanner",
+    lede: "Point your phone at a record cover and Vinyl Scanner tells you what it is: the album, its track list by side (A1, B2…), and one-tap links to play it on the service you use. Built to feel like a native app on the phone, for digging through crates.",
+    facts: [
+      ["Role", "Builder"],
+      ["Status", "Live, 2026"],
+      ["Tech", "AI cover recognition (Google Gemini) · track lists from MusicBrainz · Cloudflare Worker relay · GitHub Pages"],
+      ["How it works", [
+        "Scan a cover with the camera, pick a photo, or type the artist and album",
+        "AI identifies the album; the real track list comes from MusicBrainz, sorted by side",
+        "Play on Spotify, Apple Music, YouTube Music, YouTube, Amazon Music, Tidal, Deezer, SoundCloud or Bandcamp, switching without rescanning",
+        "History keeps your last 100 records, with the date scanned",
+      ]],
+    ],
+    media: [
+      { src: "ideas/vinyl-app.jpg", w: 1400, h: 940, alt: "Two phone screens of Vinyl Scanner: the home screen with a yellow Kind of Blue example cover and a Scan a cover button, and the result screen with Play on Spotify and the track list by side A and side B", caption: "Vinyl Scanner · scan, then play by side", wide: true },
+      { src: "ideas/vinyl-logo.svg", w: 64, h: 64, alt: "Vinyl Scanner logo: a black record inside a yellow scan frame", caption: "The Vinyl Scanner logo", logo: true },
     ],
   },
 ];
